@@ -22,13 +22,77 @@ html { scroll-behavior: smooth; }
   --pesca:  #ff7a45;
   --lilla:  #c084fc;
   --lime:   #b8f000;
+
+  /* ── DARK MODE VARS (inactive by default) ── */
+  --dm-bg:       #080808;
+  --dm-surface:  #111111;
+  --dm-border:   #ff2222;
+  --dm-text:     #f0f0f0;
+  --dm-accent:   #ff0033;
+  --dm-gold:     #ff6600;
+  --dm-glow:     rgba(255,0,51,0.55);
 }
 
-body { background: var(--cream); color: var(--ink); font-family: 'Nunito', sans-serif; overflow-x: hidden; cursor: none; }
+body { background: var(--cream); color: var(--ink); font-family: 'Nunito', sans-serif; overflow-x: hidden; cursor: none; transition: background 1.2s ease, color 1.2s ease; }
+
+/* ═══════════ DARK MODE — body-level overrides ═══════════ */
+body.dark-mode {
+  background: var(--dm-bg) !important;
+  color: var(--dm-text) !important;
+  cursor: none;
+}
+body.dark-mode header { background: rgba(8,8,8,0.97) !important; border-bottom-color: var(--dm-accent) !important; }
+body.dark-mode .logo { color: var(--dm-text) !important; }
+body.dark-mode .logo span { color: var(--dm-accent) !important; }
+body.dark-mode .h-nav a { color: var(--dm-text) !important; }
+body.dark-mode .h-nav a:hover { background: var(--dm-accent) !important; border-color: var(--dm-accent) !important; color: #fff !important; }
+body.dark-mode .hero { background: var(--dm-bg) !important; }
+body.dark-mode .hero-title { color: var(--dm-text) !important; }
+body.dark-mode .t-blue { color: var(--dm-accent) !important; }
+body.dark-mode .t-red  { color: #ff6600 !important; }
+body.dark-mode .hero-eyebrow { background: var(--dm-accent) !important; border-color: var(--dm-accent) !important; }
+body.dark-mode .hero-desc { background: rgba(20,0,0,0.85) !important; color: var(--dm-text) !important; border-color: rgba(255,0,51,0.2) !important; }
+body.dark-mode .hero-cta { background: var(--dm-accent) !important; border-color: var(--dm-accent) !important; color: #fff !important; }
+body.dark-mode .mq { background: #1a0000 !important; border-color: var(--dm-accent) !important; }
+body.dark-mode .nav-tiles .ntile { filter: brightness(0.7) saturate(0.4) hue-rotate(180deg); }
+body.dark-mode .ai-sect { background: #0d0000 !important; }
+body.dark-mode .ai-badge { background: var(--dm-accent) !important; border-color: var(--dm-accent) !important; }
+body.dark-mode .ai-title { color: var(--dm-text) !important; }
+body.dark-mode .ai-title em { color: var(--dm-accent) !important; }
+body.dark-mode .ai-widget { background: #150000 !important; border-color: var(--dm-accent) !important; box-shadow: 8px 8px 0 var(--dm-accent) !important; }
+body.dark-mode .info-panels .ip { background: #0d0000 !important; }
+body.dark-mode .ip-tag { color: var(--dm-text) !important; border-color: var(--dm-accent) !important; }
+body.dark-mode .ip-h { color: var(--dm-text) !important; }
+body.dark-mode .kits-sect { background: #080808 !important; }
+body.dark-mode .kc { background: #0d0000 !important; filter: saturate(0.3) brightness(0.7); }
+body.dark-mode .shop-s { background: #080808 !important; }
+body.dark-mode .pcard { background: #111 !important; border-color: #330000 !important; }
+body.dark-mode .pcard:hover { background: #1a0000 !important; }
+body.dark-mode .pname, body.dark-mode .pcat { color: var(--dm-text) !important; }
+body.dark-mode .pcta { color: rgba(240,240,240,0.4) !important; border-top-color: #330000 !important; }
+body.dark-mode .pcard:hover .pcta { color: var(--dm-accent) !important; }
+body.dark-mode .ctabs { border-bottom-color: var(--dm-accent) !important; background: #0d0000 !important; }
+body.dark-mode .ctab { background: #0d0000 !important; color: var(--dm-text) !important; border-color: #330000 !important; }
+body.dark-mode .ctab.active { background: var(--dm-accent) !important; color: #fff !important; }
+body.dark-mode .coll { background: #080808 !important; }
+body.dark-mode .faq-l { background: #0d0000 !important; }
+body.dark-mode footer { background: #050505 !important; border-top-color: var(--dm-accent) !important; }
+
+/* Eerie red glow effect on the whole page in dark mode */
+body.dark-mode::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255,0,51,0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
 
 /* ── CURSOR ── */
 #cur { width: 20px; height: 20px; background: var(--ink); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .15s, height .15s, background .15s; }
 #cur.big { width: 44px; height: 44px; background: var(--az); }
+body.dark-mode #cur { background: var(--dm-accent) !important; box-shadow: 0 0 12px var(--dm-accent); }
+body.dark-mode #cur.big { background: #ff6600 !important; box-shadow: 0 0 22px #ff6600; }
 
 /* ═══════════ HEADER ═══════════ */
 header {
@@ -36,61 +100,76 @@ header {
   padding: 18px 52px; position: fixed; top: 0; left: 0; right: 0; z-index: 200;
   background: rgba(245,240,228,0.94); backdrop-filter: blur(10px);
   border-bottom: 2.5px solid var(--ink);
+  transition: background 1s, border-color 1s;
 }
-.logo { font-family: 'Anton', sans-serif; font-size: 1.4rem; letter-spacing: .05em; text-decoration: none; color: var(--ink); }
-.logo span { color: var(--az); }
+.logo { font-family: 'Anton', sans-serif; font-size: 1.4rem; letter-spacing: .05em; text-decoration: none; color: var(--ink); transition: color 1s; }
+.logo span { color: var(--az); transition: color 1s; }
 .h-nav { display: flex; gap: 8px; align-items: center; }
-.h-nav a { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); text-decoration: none; padding: 8px 16px; border-radius: 100px; border: 2px solid transparent; transition: background .2s, border-color .2s; }
+.h-nav a { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); text-decoration: none; padding: 8px 16px; border-radius: 100px; border: 2px solid transparent; transition: background .2s, border-color .2s, color 1s; }
 .h-nav a:hover { background: var(--oro); border-color: var(--ink); }
 .h-nav .cta-link { background: var(--ink); color: var(--cream); border-color: var(--ink); }
 .h-nav .cta-link:hover { background: var(--az); border-color: var(--az); }
 
-/* ═══════════ HERO ═══════════ */
-.hero { min-height: calc(100vh - 52px); max-height: 900px; padding-top: 68px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+/* Dark mode — pulsing header warning */
+body.dark-mode header::after {
+  content: '😈 DARK GAFFER MODE — ACTIVE';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Anton', sans-serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  color: var(--dm-accent);
+  animation: dmPulse 1.5s ease-in-out infinite;
+}
+@keyframes dmPulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-/* Colour blobs */
-.blob { position: absolute; border-radius: 50%; pointer-events: none; z-index: 1; }
+/* ═══════════ HERO ═══════════ */
+.hero { min-height: calc(100vh - 52px); max-height: 900px; padding-top: 68px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; transition: background 1.2s; }
+
+.blob { position: absolute; border-radius: 50%; pointer-events: none; z-index: 1; transition: opacity 1.2s; }
 .b1 { width: 280px; height: 280px; background: var(--oro);   top: -80px;  left: -100px; opacity: .28; }
 .b2 { width: 200px; height: 200px; background: var(--rosso); bottom: -50px; right: -70px; opacity: .22; }
 .b3 { width: 160px; height: 160px; background: var(--verde); top: 40%;    left: 8%;    opacity: .18; }
 .b4 { width: 120px; height: 120px; background: var(--sky);   bottom: 20%; right: 10%;  opacity: .28; }
 .b5 { width:  90px; height:  90px; background: var(--lilla); top: 20%;    right: 18%;  opacity: .22; }
+body.dark-mode .b1 { background: #ff0033; opacity: .12; }
+body.dark-mode .b2 { background: #660000; opacity: .18; }
+body.dark-mode .b3 { background: #330000; opacity: .14; }
+body.dark-mode .b4 { background: #ff2200; opacity: .08; }
+body.dark-mode .b5 { background: #990000; opacity: .12; }
 
-/* Hero headline */
 .hero-headline { text-align: center; position: relative; z-index: 10; margin-bottom: -50px; padding: 0 24px; }
-.hero-eyebrow { display: inline-block; background: var(--az); color: #fff; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .75rem; letter-spacing: .2em; text-transform: uppercase; padding: 6px 20px; border-radius: 100px; border: 2.5px solid var(--ink); margin-bottom: 18px; box-shadow: 3px 3px 0 var(--ink); }
-.hero-title { font-family: 'Anton', sans-serif; font-size: clamp(4.5rem, 10vw, 9.5rem); line-height: .88; letter-spacing: -.01em; }
-.hero-title .t-blue  { color: var(--az); }
-.hero-title .t-red   { color: var(--rosso); }
+.hero-eyebrow { display: inline-block; background: var(--az); color: #fff; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .75rem; letter-spacing: .2em; text-transform: uppercase; padding: 6px 20px; border-radius: 100px; border: 2.5px solid var(--ink); margin-bottom: 18px; box-shadow: 3px 3px 0 var(--ink); transition: background 1s, border-color 1s, box-shadow 1s; }
+.hero-title { font-family: 'Anton', sans-serif; font-size: clamp(4.5rem, 10vw, 9.5rem); line-height: .88; letter-spacing: -.01em; transition: color 1s; }
+.hero-title .t-blue  { color: var(--az); transition: color 1s; }
+.hero-title .t-red   { color: var(--rosso); transition: color 1s; }
 
-/* Hero scene */
 .hero-scene { position: relative; width: 100%; max-width: 1200px; height: 480px; display: flex; align-items: center; justify-content: center; z-index: 5; }
-
-/* Football character */
 .football-wrap { position: relative; z-index: 8; width: 300px; height: 300px; flex-shrink: 0; animation: ballBounce 3.5s ease-in-out infinite; }
 @keyframes ballBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
 
-/* Kit photo cards — scattered */
-.kp {
-  position: absolute; border: 3.5px solid var(--ink); border-radius: 18px;
-  overflow: hidden; background: var(--carta);
-  box-shadow: 5px 5px 0 var(--ink);
-  transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .2s, z-index 0s;
-  z-index: 5; cursor: none; width: 190px;
-}
+/* Demon crown — hidden by default, shown in dark mode */
+#demonCrown { opacity: 0; transition: opacity 0.8s ease; pointer-events: none; }
+body.dark-mode #demonCrown { opacity: 1; }
+/* Evil glow on the ball in dark mode */
+body.dark-mode .football-wrap { filter: drop-shadow(0 0 20px rgba(255,0,51,0.7)); }
+/* Evil frown instead of smile — handled by JS class */
+body.dark-mode #ballSmile { d: path("M130 205 Q160 179 190 205"); }
+
+.kp { position: absolute; border: 3.5px solid var(--ink); border-radius: 18px; overflow: hidden; background: var(--carta); box-shadow: 5px 5px 0 var(--ink); transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .2s, filter 1s; z-index: 5; cursor: none; width: 190px; }
 .kp:hover { box-shadow: 9px 9px 0 var(--ink); z-index: 20; }
 .kp img { width: 100%; display: block; aspect-ratio: 16/9; object-fit: cover; object-position: center top; }
 .kp-lbl { background: var(--ink); color: var(--cream); font-family: 'Anton', sans-serif; font-size: .6rem; letter-spacing: .18em; text-transform: uppercase; padding: 6px 12px; text-align: center; }
+body.dark-mode .kp { border-color: var(--dm-accent); box-shadow: 5px 5px 0 var(--dm-accent); filter: saturate(0.2) brightness(0.5); }
+body.dark-mode .kp-lbl { background: #1a0000; color: var(--dm-text); }
 
-/* Exact positions + rotations */
-.kp1 { top:  20px; left:  30px;  transform: rotate(-7deg); }   /* Cold kit — top left */
-.kp2 { top:  50px; right: 40px;  transform: rotate(6deg);  width: 170px; } /* Warm kit — top right */
-.kp3 { bottom: 30px; left: 50px; transform: rotate(4deg);  width: 175px; } /* Rain kit — bottom left */
-.kp4 { bottom: 20px; right: 30px; transform: rotate(-6deg); width: 180px; } /* Sunny kit — bottom right */
-.kp5 { top: 180px; left:  -10px; transform: rotate(-3deg); width: 155px; } /* Left mid */
-.kp6 { top: 160px; right: -10px; transform: rotate(5deg);  width: 155px; } /* Right mid */
-
-/* Hover scale — preserve base rotation via JS-free approach */
+.kp1 { top:  20px; left:  30px;  transform: rotate(-7deg); }
+.kp2 { top:  50px; right: 40px;  transform: rotate(6deg);  width: 170px; }
+.kp3 { bottom: 30px; left: 50px; transform: rotate(4deg);  width: 175px; }
+.kp4 { bottom: 20px; right: 30px; transform: rotate(-6deg); width: 180px; }
+.kp5 { top: 180px; left:  -10px; transform: rotate(-3deg); width: 155px; }
+.kp6 { top: 160px; right: -10px; transform: rotate(5deg);  width: 155px; }
 .kp1:hover { transform: rotate(-7deg) scale(1.08); }
 .kp2:hover { transform: rotate(6deg)  scale(1.08); }
 .kp3:hover { transform: rotate(4deg)  scale(1.08); }
@@ -98,29 +177,28 @@ header {
 .kp5:hover { transform: rotate(-3deg) scale(1.08); }
 .kp6:hover { transform: rotate(5deg)  scale(1.08); }
 
-/* Floating sticker badges */
-.sticker { position: absolute; z-index: 12; pointer-events: none; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; border: 2.5px solid var(--ink); border-radius: 100px; padding: 6px 14px; white-space: nowrap; box-shadow: 3px 3px 0 var(--ink); }
+.sticker { position: absolute; z-index: 12; pointer-events: none; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; border: 2.5px solid var(--ink); border-radius: 100px; padding: 6px 14px; white-space: nowrap; box-shadow: 3px 3px 0 var(--ink); transition: background 1s, color 1s, border-color 1s, box-shadow 1s; }
 .st1 { top:  55px; left:  260px; transform: rotate(-8deg); background: var(--lime); color: var(--ink); }
 .st2 { bottom: 90px; left: 230px; transform: rotate(5deg);  background: var(--sky);  color: var(--ink); }
 .st3 { top:  75px; right: 260px; transform: rotate(7deg);  background: var(--rosso); color: #fff; }
 .st4 { bottom: 110px; right: 230px; transform: rotate(-4deg); background: var(--lilla); color: #fff; }
+body.dark-mode .sticker { background: #1a0000 !important; color: var(--dm-accent) !important; border-color: var(--dm-accent) !important; box-shadow: 3px 3px 0 var(--dm-accent) !important; }
 
-/* Hero bottom */
 .hero-bottom { position: relative; z-index: 10; display: flex; align-items: center; gap: 24px; margin-top: -30px; flex-wrap: wrap; justify-content: center; padding: 0 24px; }
-.hero-desc { font-size: .88rem; line-height: 1.75; max-width: 340px; opacity: .7; font-weight: 700; background: rgba(245,240,228,.9); border-radius: 14px; padding: 12px 18px; border: 2px solid rgba(26,18,6,.12); }
+.hero-desc { font-size: .88rem; line-height: 1.75; max-width: 340px; opacity: .7; font-weight: 700; background: rgba(245,240,228,.9); border-radius: 14px; padding: 12px 18px; border: 2px solid rgba(26,18,6,.12); transition: background 1s, color 1s, border-color 1s; }
 .hero-cta { display: inline-flex; align-items: center; gap: 10px; background: var(--ink); color: var(--cream); font-family: 'Anton', sans-serif; font-size: .9rem; letter-spacing: .15em; text-transform: uppercase; padding: 18px 40px; border: 2.5px solid var(--ink); border-radius: 100px; text-decoration: none; cursor: none; box-shadow: 4px 4px 0 rgba(26,18,6,.3); transition: background .2s, transform .15s, box-shadow .15s; }
 .hero-cta:hover { background: var(--az); border-color: var(--az); transform: translateY(-3px); box-shadow: 4px 7px 0 rgba(26,18,6,.25); }
 
 /* ═══════════ MARQUEE ═══════════ */
-.mq { background: var(--az); border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); padding: 14px 0; overflow: hidden; }
+.mq { background: var(--az); border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); padding: 14px 0; overflow: hidden; transition: background 1s, border-color 1s; }
 .mq-inner { display: inline-flex; white-space: nowrap; animation: mq 22s linear infinite; }
 .mi { font-family: 'Anton', sans-serif; font-size: 1rem; letter-spacing: .06em; text-transform: uppercase; color: #fff; padding: 0 32px; }
 .ms { color: var(--oro); }
 @keyframes mq { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
 /* ═══════════ NAV TILES ═══════════ */
-.nav-tiles { display: grid; grid-template-columns: repeat(4,1fr); border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); }
-.ntile { min-height: 280px; position: relative; overflow: hidden; cursor: none; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 32px; border-right: 3px solid var(--ink); transition: filter .3s; }
+.nav-tiles { display: grid; grid-template-columns: repeat(4,1fr); border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); transition: border-color 1s; }
+.ntile { min-height: 280px; position: relative; overflow: hidden; cursor: none; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 32px; border-right: 3px solid var(--ink); transition: filter .3s, border-color 1s; }
 .ntile:last-child { border-right: none; }
 .ntile:nth-child(1) { background: #0f1f5c; }
 .ntile:nth-child(2) { background: #5c0f0f; }
@@ -139,10 +217,9 @@ header {
 .ntile:nth-child(4)::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background:#7c3aed; }
 
 /* ═══════════ GAFFER AI SECTION ═══════════ */
-.ai-sect { padding: 96px 56px; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; border-bottom: 3px solid var(--ink); position: relative; overflow: hidden; }
+.ai-sect { padding: 96px 56px; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; border-bottom: 3px solid var(--ink); position: relative; overflow: hidden; transition: background 1s, border-color 1s; }
 .ai-sect::before { content:''; position:absolute; top:-140px; right:-140px; width:520px; height:520px; border-radius:50%; background:var(--oro); opacity:.1; pointer-events:none; }
-
-.ai-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--az); color: #fff; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; padding: 6px 16px; border-radius: 100px; border: 2.5px solid var(--ink); margin-bottom: 20px; box-shadow: 3px 3px 0 var(--ink); }
+.ai-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--az); color: #fff; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; padding: 6px 16px; border-radius: 100px; border: 2.5px solid var(--ink); margin-bottom: 20px; box-shadow: 3px 3px 0 var(--ink); transition: background 1s; }
 .ai-title { font-family: 'Anton', sans-serif; font-size: clamp(2.8rem,5vw,5rem); line-height: .92; letter-spacing: -.01em; margin-bottom: 16px; }
 .ai-title em { font-style: italic; color: var(--az); }
 .ai-sub { font-size: .88rem; line-height: 1.8; opacity: .65; max-width: 380px; font-weight: 700; margin-bottom: 32px; }
@@ -150,8 +227,7 @@ header {
 .ai-step { display: flex; align-items: center; gap: 14px; font-weight: 700; font-size: .84rem; }
 .step-num { width: 34px; height: 34px; border-radius: 50%; background: var(--ink); color: var(--cream); font-family: 'Anton', sans-serif; font-size: .9rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-/* Widget card */
-.ai-widget { background: var(--carta); border: 3px solid var(--ink); border-radius: 28px; padding: 36px 36px 32px; box-shadow: 8px 8px 0 var(--ink); position: relative; z-index: 2; }
+.ai-widget { background: var(--carta); border: 3px solid var(--ink); border-radius: 28px; padding: 36px 36px 32px; box-shadow: 8px 8px 0 var(--ink); position: relative; z-index: 2; transition: background 1s, border-color 1s, box-shadow 1s; }
 .w-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--az); color: #fff; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; padding: 5px 14px; border-radius: 100px; border: 2px solid var(--ink); margin-bottom: 18px; }
 .w-h { font-family: 'Anton', sans-serif; font-size: 1.6rem; margin-bottom: 6px; }
 .w-sub { font-size: .72rem; opacity: .55; font-weight: 700; margin-bottom: 24px; line-height: 1.65; }
@@ -173,8 +249,8 @@ header {
 .kit-box-h { font-family: 'Anton', sans-serif; font-size: .82rem; letter-spacing: .14em; margin-bottom: 8px; color: var(--oro); }
 
 /* ═══════════ 3 INFO PANELS ═══════════ */
-.info-panels { display: grid; grid-template-columns: repeat(3,1fr); border-bottom: 3px solid var(--ink); }
-.ip { padding: 64px 48px; border-right: 3px solid var(--ink); position: relative; overflow: hidden; }
+.info-panels { display: grid; grid-template-columns: repeat(3,1fr); border-bottom: 3px solid var(--ink); transition: border-color 1s; }
+.ip { padding: 64px 48px; border-right: 3px solid var(--ink); position: relative; overflow: hidden; transition: background 1s, border-color 1s; }
 .ip:last-child { border-right: none; }
 .ip:nth-child(1) { background: #fff8e1; border-top: 3px solid var(--az); }
 .ip:nth-child(2) { background: #e3f0ff; border-top: 3px solid var(--rosso); }
@@ -186,41 +262,33 @@ header {
 .ip-p { font-size: .78rem; line-height: 1.9; opacity: .6; font-weight: 700; }
 .ip-emoji { position: absolute; bottom: 16px; right: 22px; font-size: 4rem; opacity: .09; user-select: none; }
 
-/* ═══════════ KIT ROOM — 4 weather cards ═══════════ */
-.kits-sect { border-bottom: 3px solid var(--ink); }
-.kits-hd { padding: 64px 56px 48px; border-bottom: 3px solid var(--ink); display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 20px; }
+/* ═══════════ KIT ROOM ═══════════ */
+.kits-sect { border-bottom: 3px solid var(--ink); transition: border-color 1s; }
+.kits-hd { padding: 64px 56px 48px; border-bottom: 3px solid var(--ink); display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 20px; transition: border-color 1s; }
 .kits-htitle { font-family: 'Anton', sans-serif; font-size: clamp(2.5rem,4vw,4rem); line-height: 1; }
 .kits-htitle em { font-style: italic; color: var(--az); }
 .kits-hsub { font-size: .72rem; opacity: .42; max-width: 260px; text-align: right; line-height: 1.8; font-weight: 700; }
 .kits-grid { display: grid; grid-template-columns: repeat(4,1fr); }
-
-/* Each kit card */
 .kc { border-right: 3px solid var(--ink); position: relative; overflow: hidden; cursor: none; transition: filter .25s; display: flex; flex-direction: column; }
 .kc:last-child { border-right: none; }
 .kc:hover { filter: brightness(.95); }
-
-/* Kit card image */
 .kc-img { width: 100%; aspect-ratio: 3/4; overflow: hidden; background: var(--carta); border-bottom: 3px solid var(--ink); position: relative; }
 .kc-img img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; transition: transform .5s ease; }
 .kc:hover .kc-img img { transform: scale(1.05); }
-
-/* Kit card body */
 .kc-body { padding: 28px 28px 32px; flex: 1; }
 .kc-pos { display: inline-block; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .55rem; letter-spacing: .28em; text-transform: uppercase; border: 2px solid var(--ink); border-radius: 100px; padding: 3px 10px; margin-bottom: 12px; opacity: .5; }
 .kc-num { font-family: 'Anton', sans-serif; font-size: 4.5rem; line-height: 1; opacity: .06; margin-bottom: 4px; }
 .kc-tag { font-size: .52rem; letter-spacing: .32em; text-transform: uppercase; margin-bottom: 12px; opacity: .38; font-weight: 700; }
 .kc-name { font-family: 'Anton', sans-serif; font-size: 1.25rem; line-height: 1.1; margin-bottom: 16px; }
 .kc-weather { display: inline-block; border: 2px solid rgba(26,18,6,.2); border-radius: 100px; opacity: .6; font-size: .52rem; letter-spacing: .18em; padding: 4px 12px; font-weight: 700; }
-
-/* Background tints per card */
 .kc:nth-child(1) { background: #e8f0ff; }
 .kc:nth-child(2) { background: #fff8e1; }
 .kc:nth-child(3) { background: #e8f5e9; }
 .kc:nth-child(4) { background: #fce4ec; }
 
 /* ═══════════ SHOP ═══════════ */
-.shop-s { border-bottom: 3px solid var(--ink); }
-.shop-hd { padding: 72px 56px 48px; border-bottom: 3px solid var(--ink); display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 24px; }
+.shop-s { border-bottom: 3px solid var(--ink); transition: border-color 1s; }
+.shop-hd { padding: 72px 56px 48px; border-bottom: 3px solid var(--ink); display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 24px; transition: border-color 1s; }
 .shop-sn { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; opacity: .35; margin-bottom: 14px; }
 .shop-title { font-family: 'Anton', sans-serif; font-size: clamp(2.5rem,5vw,4.5rem); line-height: .92; }
 .shop-title em { font-style: italic; color: var(--az); }
@@ -229,8 +297,7 @@ header {
 .gbadge.show { display: flex; }
 @keyframes bIn { from{transform:translateX(40px);opacity:0} to{transform:translateX(0);opacity:1} }
 
-/* Filter tabs */
-.ctabs { display: flex; border-bottom: 3px solid var(--ink); }
+.ctabs { display: flex; border-bottom: 3px solid var(--ink); transition: border-color 1s; }
 .ctab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 24px 12px; border-right: 2px solid var(--ink); cursor: none; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; transition: background .2s; color: var(--ink); background: var(--cream); }
 .ctab:last-child { border-right: none; }
 .ctab .ti { font-size: 1.6rem; transition: transform .3s cubic-bezier(.34,1.56,.64,1); }
@@ -241,7 +308,6 @@ header {
 .tc { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: rgba(26,18,6,.12); font-size: .46rem; font-family: 'Space Mono', monospace; }
 .ctab.active .tc { background: rgba(255,255,255,.2); }
 
-/* Product grid */
 .pgrid { display: grid; grid-template-columns: repeat(4,1fr); }
 .pcard { border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink); display: none; flex-direction: column; cursor: none; transition: background .2s; position: relative; background: #fff; }
 .pcard.vis { display: flex; }
@@ -263,12 +329,13 @@ header {
 .pwt { display: inline-flex; align-items: center; gap: 4px; border: 1.5px solid rgba(26,18,6,.18); border-radius: 100px; font-size: .46rem; letter-spacing: .16em; padding: 2px 8px; margin-top: 6px; width: fit-content; opacity: .5; font-weight: 700; }
 .pcta { margin-top: auto; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; border-top: 1.5px solid rgba(26,18,6,.1); background: none; border-left: none; border-right: none; border-bottom: none; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .56rem; letter-spacing: .16em; text-transform: uppercase; color: rgba(26,18,6,.38); width: 100%; cursor: none; transition: color .2s; }
 .pcard:hover .pcta { color: var(--az); }
+body.dark-mode .pcard:hover .pcta { color: var(--dm-accent) !important; }
 .arr { transition: transform .2s; }
 .pcard:hover .arr { transform: translateX(5px); }
 .se { display: none; grid-column: 1/-1; padding: 70px; text-align: center; font-family: 'Anton', sans-serif; font-size: .95rem; opacity: .14; letter-spacing: .1em; text-transform: uppercase; }
 
 /* ═══════════ COLLABS ═══════════ */
-.coll { border-bottom: 3px solid var(--ink); padding: 56px; background: var(--carta); }
+.coll { border-bottom: 3px solid var(--ink); padding: 56px; background: var(--carta); transition: background 1s, border-color 1s; }
 .coll-lbl { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; opacity: .28; margin-bottom: 28px; }
 .coll-strip { overflow: hidden; }
 .coll-inner { display: inline-flex; animation: mq 28s linear infinite; }
@@ -276,12 +343,12 @@ header {
 .ci-itm:hover { color: var(--ink); }
 
 /* ═══════════ FAQ ═══════════ */
-.faq-s { border-bottom: 3px solid var(--ink); display: grid; grid-template-columns: 1fr 1fr; }
-.faq-l { border-right: 3px solid var(--ink); padding: 80px 56px; background: var(--ink); color: var(--cream); position: relative; overflow: hidden; }
+.faq-s { border-bottom: 3px solid var(--ink); display: grid; grid-template-columns: 1fr 1fr; transition: border-color 1s; }
+.faq-l { border-right: 3px solid var(--ink); padding: 80px 56px; background: var(--ink); color: var(--cream); position: relative; overflow: hidden; transition: background 1s, border-color 1s; }
 .faq-t { font-family: 'Anton', sans-serif; font-size: clamp(2.8rem,5vw,4.8rem); line-height: .92; }
 .faq-t em { font-style: italic; color: var(--oro); }
 .faq-bg { position: absolute; bottom: -30px; left: -10px; font-family: 'Anton', sans-serif; font-size: 12rem; opacity: .04; line-height: 1; user-select: none; color: var(--cream); }
-.faq-r { padding: 80px 56px; background: var(--cream); }
+.faq-r { padding: 80px 56px; background: var(--cream); transition: background 1s; }
 .fitem { border-bottom: 2px solid rgba(26,18,6,.1); }
 .fq { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; cursor: none; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .82rem; color: rgba(26,18,6,.55); transition: color .2s; }
 .fq:hover { color: var(--ink); }
@@ -292,7 +359,7 @@ header {
 .fitem.open .fa { max-height: 300px; padding-bottom: 20px; }
 
 /* ═══════════ FOOTER ═══════════ */
-footer { border-top: 3px solid var(--ink); padding: 44px 56px; display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; background: var(--ink); color: var(--cream); }
+footer { border-top: 3px solid var(--ink); padding: 44px 56px; display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; background: var(--ink); color: var(--cream); transition: background 1s, border-color 1s; }
 .fl { font-family: 'Anton', sans-serif; font-size: 1.5rem; }
 .fl span { color: var(--az); }
 .ft { font-size: .5rem; letter-spacing: .22em; opacity: .25; margin-top: 5px; font-family: 'Space Mono', monospace; }
@@ -303,7 +370,515 @@ footer { border-top: 3px solid var(--ink); padding: 44px 56px; display: grid; gr
 
 @keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
 
-/* ═══════════ RESPONSIVE — TABLET ═══════════ */
+/* ══════════════════════════════════════════════════════
+   ═══════════ DARK GAME OVERLAY ════════════════════════
+   ══════════════════════════════════════════════════════ */
+
+/* The full-screen dark curtain that slides in */
+#darkOverlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 5000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+#darkOverlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── Welcome popup (the initial "you've been signed" shock screen) ── */
+#welcomePopup {
+  position: fixed;
+  inset: 0;
+  z-index: 6000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease 0.7s;
+  background: radial-gradient(ellipse at center, rgba(30,0,0,0.95) 0%, rgba(0,0,0,0.98) 100%);
+}
+#welcomePopup.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.wp-box {
+  text-align: center;
+  max-width: 640px;
+  padding: 60px 48px;
+  border: 3px solid var(--dm-accent);
+  border-radius: 24px;
+  background: #0d0000;
+  box-shadow: 0 0 80px rgba(255,0,51,0.4), inset 0 0 40px rgba(255,0,51,0.05);
+  animation: wpSlideIn 0.6s cubic-bezier(.34,1.56,.64,1) 0.8s both;
+}
+@keyframes wpSlideIn { from{transform:translateY(60px) scale(0.85);opacity:0} to{transform:translateY(0) scale(1);opacity:1} }
+.wp-skull { font-size: 5rem; margin-bottom: 16px; animation: wpSkullBob 1.5s ease-in-out infinite; }
+@keyframes wpSkullBob { 0%,100%{transform:translateY(0) rotate(-5deg)} 50%{transform:translateY(-10px) rotate(5deg)} }
+.wp-title {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  color: var(--dm-accent);
+  text-shadow: 0 0 30px rgba(255,0,51,0.8);
+  margin-bottom: 12px;
+  letter-spacing: 0.05em;
+}
+.wp-sub { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 0.9rem; color: rgba(240,240,240,0.7); line-height: 1.8; margin-bottom: 32px; }
+.wp-rules { text-align: left; background: rgba(255,0,51,0.06); border: 1.5px solid rgba(255,0,51,0.2); border-radius: 14px; padding: 20px 24px; margin-bottom: 32px; }
+.wp-rules h4 { font-family: 'Anton', sans-serif; font-size: 0.75rem; letter-spacing: 0.25em; color: var(--dm-gold); margin-bottom: 14px; }
+.wp-rule { display: flex; gap: 12px; margin-bottom: 10px; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.75rem; color: rgba(240,240,240,0.75); line-height: 1.6; }
+.wp-rule-num { font-family: 'Anton', sans-serif; color: var(--dm-accent); flex-shrink: 0; font-size: 0.9rem; }
+.wp-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--dm-accent); color: #fff;
+  font-family: 'Anton', sans-serif; font-size: 1rem; letter-spacing: 0.2em; text-transform: uppercase;
+  padding: 18px 44px; border: none; border-radius: 100px; cursor: none;
+  box-shadow: 0 0 30px rgba(255,0,51,0.6);
+  animation: btnPulse 1.8s ease-in-out infinite;
+  transition: transform 0.15s;
+}
+.wp-btn:hover { transform: scale(1.05); }
+@keyframes btnPulse { 0%,100%{box-shadow:0 0 30px rgba(255,0,51,0.6)} 50%{box-shadow:0 0 60px rgba(255,0,51,0.9)} }
+
+/* ── The main Game Screen ── */
+#gameScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 7000;
+  background: #080808;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+#gameScreen.active { display: flex; }
+
+/* Game top bar */
+.gs-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  border-bottom: 2px solid var(--dm-accent);
+  background: #0d0000;
+  flex-shrink: 0;
+}
+.gs-logo { font-family: 'Anton', sans-serif; font-size: 1rem; letter-spacing: 0.1em; color: var(--dm-accent); text-shadow: 0 0 10px rgba(255,0,51,0.5); }
+.gs-stats { display: flex; gap: 32px; align-items: center; }
+.gs-stat { text-align: center; }
+.gs-stat-label { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 0.5rem; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(240,240,240,0.35); margin-bottom: 2px; }
+.gs-stat-val { font-family: 'Anton', sans-serif; font-size: 1.4rem; color: var(--dm-text); }
+#timerVal { color: var(--dm-accent); }
+#timerVal.urgent { animation: timerUrgent 0.5s ease-in-out infinite; }
+@keyframes timerUrgent { 0%,100%{color:var(--dm-accent)} 50%{color:#ff6600} }
+#budgetVal { color: #00ff88; }
+#budgetVal.low { color: #ff6600; }
+.gs-selected-count { font-family: 'Anton', sans-serif; font-size: 1rem; color: var(--dm-gold); }
+
+/* Game body: pitch on left, inventory on right */
+.gs-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  gap: 0;
+}
+
+/* ── Football Pitch (left panel) ── */
+.gs-pitch-panel {
+  flex: 0 0 50%;
+  display: flex;
+  flex-direction: column;
+  border-right: 2px solid var(--dm-accent);
+  background: #050505;
+  padding: 20px;
+  overflow: hidden;
+}
+.gs-pitch-title {
+  font-family: 'Anton', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(240,240,240,0.3);
+  margin-bottom: 12px;
+}
+/* The pitch itself */
+.pitch-field {
+  flex: 1;
+  background: #0a1a0a;
+  border: 2px solid rgba(0,255,80,0.25);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+}
+/* Pitch markings via SVG background */
+.pitch-field::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    /* Centre circle */
+    radial-gradient(circle at 50% 50%, transparent 18%, rgba(255,255,255,0.06) 18.5%, transparent 19%),
+    /* Centre line */
+    linear-gradient(to bottom, transparent 49%, rgba(255,255,255,0.06) 49.5%, transparent 50%),
+    /* Penalty areas */
+    linear-gradient(to right, transparent 20%, rgba(255,255,255,0.04) 20.5%, transparent 21%, transparent 79%, rgba(255,255,255,0.04) 79.5%, transparent 80%);
+  pointer-events: none;
+}
+/* Drop zones for 5-a-side formation: GK / DEF DEF / MID / FWD FWD */
+.drop-zone {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border: 2px dashed rgba(255,0,51,0.4);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: none;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+  background: rgba(255,0,51,0.04);
+}
+.drop-zone.drag-over {
+  border-color: rgba(255,0,51,0.9);
+  background: rgba(255,0,51,0.15);
+  transform: scale(1.08);
+}
+.drop-zone.filled {
+  border-color: rgba(0,255,80,0.6);
+  background: rgba(0,255,80,0.08);
+}
+.drop-zone-label {
+  font-family: 'Anton', sans-serif;
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  color: rgba(255,0,51,0.5);
+  text-align: center;
+  line-height: 1.3;
+  pointer-events: none;
+  user-select: none;
+}
+.drop-zone.filled .drop-zone-label { display: none; }
+/* The mini card that sits inside a drop zone once placed */
+.dz-card {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px;
+  cursor: none;
+}
+.dz-card img { width: 44px; height: 44px; object-fit: cover; border-radius: 6px; border: 1.5px solid rgba(0,255,80,0.4); }
+.dz-card-name { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 0.36rem; color: rgba(240,240,240,0.8); text-align: center; line-height: 1.2; max-width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dz-remove { font-size: 0.55rem; color: rgba(255,0,51,0.6); cursor: none; }
+.dz-remove:hover { color: var(--dm-accent); }
+
+.pitch-weather-info {
+  margin-top: 10px;
+  background: rgba(255,0,51,0.07);
+  border: 1px solid rgba(255,0,51,0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.65rem;
+  color: rgba(240,240,240,0.6);
+  line-height: 1.6;
+}
+.pitch-weather-info strong { color: var(--dm-gold); font-family: 'Anton', sans-serif; font-size: 0.7rem; letter-spacing: 0.1em; }
+
+/* ── Inventory panel (right) ── */
+.gs-inventory-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow: hidden;
+}
+.gs-inv-title {
+  font-family: 'Anton', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(240,240,240,0.3);
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+/* Horizontal scroll container for apparel cards */
+.gs-inv-scroll {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
+  gap: 12px;
+  padding-bottom: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,0,51,0.4) transparent;
+}
+.gs-inv-scroll::-webkit-scrollbar { height: 4px; }
+.gs-inv-scroll::-webkit-scrollbar-track { background: transparent; }
+.gs-inv-scroll::-webkit-scrollbar-thumb { background: rgba(255,0,51,0.4); border-radius: 2px; }
+
+/* Individual inventory card */
+.inv-card {
+  flex: 0 0 130px;
+  background: #111;
+  border: 1.5px solid #2a0000;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: none;
+  user-select: none;
+  transition: border-color 0.2s, transform 0.2s, opacity 0.2s;
+  position: relative;
+}
+.inv-card:hover { border-color: rgba(255,0,51,0.6); transform: translateY(-4px); }
+.inv-card.dragging { opacity: 0.4; transform: scale(0.95); }
+.inv-card.used { opacity: 0.3; filter: grayscale(1); pointer-events: none; }
+.inv-card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
+.inv-card-body { padding: 6px 8px 8px; }
+.inv-card-name { font-family: 'Anton', sans-serif; font-size: 0.55rem; line-height: 1.2; color: var(--dm-text); margin-bottom: 3px; }
+.inv-card-price { font-family: 'Space Mono', monospace; font-size: 0.5rem; color: #00ff88; }
+.inv-card-drag-hint { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 0.4rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,0,51,0.4); margin-top: 4px; }
+
+/* Submit button bar at bottom of game */
+.gs-submit-bar {
+  flex-shrink: 0;
+  padding: 12px 20px;
+  border-top: 2px solid var(--dm-accent);
+  background: #0d0000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.gs-submit-msg { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.7rem; color: rgba(240,240,240,0.45); }
+.gs-submit-btn {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--dm-accent); color: #fff;
+  font-family: 'Anton', sans-serif; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase;
+  padding: 12px 32px; border: none; border-radius: 100px;
+  cursor: none; opacity: 0.4; pointer-events: none;
+  transition: opacity 0.3s, box-shadow 0.3s;
+}
+.gs-submit-btn.ready {
+  opacity: 1;
+  pointer-events: all;
+  box-shadow: 0 0 30px rgba(255,0,51,0.5);
+  animation: btnPulse 1.8s ease-in-out infinite;
+}
+.gs-quit-btn {
+  background: transparent; color: rgba(240,240,240,0.3);
+  font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
+  border: 1px solid rgba(240,240,240,0.1); border-radius: 100px; padding: 10px 20px;
+  cursor: none; transition: color 0.2s, border-color 0.2s;
+}
+.gs-quit-btn:hover { color: rgba(240,240,240,0.7); border-color: rgba(240,240,240,0.3); }
+
+/* ── Gaffer judgment loading screen ── */
+#judgmentScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 8000;
+  background: #000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+}
+#judgmentScreen.active { display: flex; }
+.js-spinner {
+  width: 80px; height: 80px;
+  border: 4px solid rgba(255,0,51,0.15);
+  border-top-color: var(--dm-accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 32px;
+}
+.js-title { font-family: 'Anton', sans-serif; font-size: clamp(1.8rem,4vw,3rem); color: var(--dm-accent); text-shadow: 0 0 40px rgba(255,0,51,0.6); margin-bottom: 16px; letter-spacing: 0.05em; }
+.js-sub { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.85rem; color: rgba(240,240,240,0.5); animation: fadeTextCycle 3s ease-in-out infinite; }
+@keyframes fadeTextCycle { 0%,100%{opacity:0.5} 50%{opacity:1} }
+
+/* ── Win screen ── */
+#winScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: #000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  overflow: hidden;
+}
+#winScreen.active { display: flex; }
+/* Graffiti burst background */
+#winScreen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(0,255,80,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.win-graffiti {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(2.5rem, 8vw, 6rem);
+  color: #00ff88;
+  text-shadow: 0 0 40px rgba(0,255,80,0.8), 4px 4px 0 rgba(0,180,60,0.5);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  transform: rotate(-3deg);
+  animation: graffitiIn 0.8s cubic-bezier(.34,1.56,.64,1) both;
+  margin-bottom: 8px;
+}
+@keyframes graffitiIn { from{transform:rotate(-3deg) scale(0.3);opacity:0} to{transform:rotate(-3deg) scale(1);opacity:1} }
+.win-sub-graffiti {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(1rem, 3vw, 1.8rem);
+  color: var(--dm-gold);
+  text-shadow: 0 0 20px rgba(255,102,0,0.7);
+  letter-spacing: 0.15em;
+  transform: rotate(1.5deg);
+  animation: graffitiIn 0.8s cubic-bezier(.34,1.56,.64,1) 0.15s both;
+  margin-bottom: 32px;
+}
+.win-prize-card {
+  background: #0d0d0d;
+  border: 2px solid #00ff88;
+  border-radius: 18px;
+  padding: 24px;
+  max-width: 320px;
+  box-shadow: 0 0 60px rgba(0,255,80,0.3);
+  animation: graffitiIn 0.8s cubic-bezier(.34,1.56,.64,1) 0.3s both;
+  margin-bottom: 28px;
+}
+.win-prize-card img { width: 100%; border-radius: 10px; margin-bottom: 12px; }
+.win-prize-name { font-family: 'Anton', sans-serif; font-size: 1.1rem; color: var(--dm-text); margin-bottom: 6px; }
+.win-prize-free {
+  display: inline-block;
+  background: #00ff88;
+  color: #000;
+  font-family: 'Anton', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  padding: 6px 18px;
+  border-radius: 100px;
+  box-shadow: 0 0 20px rgba(0,255,80,0.6);
+}
+.win-contract-btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: linear-gradient(135deg, #00ff88, #00cc66);
+  color: #000;
+  font-family: 'Anton', sans-serif; font-size: 1.1rem; letter-spacing: 0.2em; text-transform: uppercase;
+  padding: 20px 52px; border: none; border-radius: 100px;
+  cursor: none;
+  box-shadow: 0 0 50px rgba(0,255,80,0.5);
+  animation: contractPulse 1.8s ease-in-out infinite, graffitiIn 0.8s cubic-bezier(.34,1.56,.64,1) 0.5s both;
+  transition: transform 0.15s;
+}
+.win-contract-btn:hover { transform: scale(1.05); }
+@keyframes contractPulse { 0%,100%{box-shadow:0 0 50px rgba(0,255,80,0.5)} 50%{box-shadow:0 0 90px rgba(0,255,80,0.9)} }
+
+/* ── Gaffer says NO screen ── */
+#loseScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: #0d0000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+}
+#loseScreen.active { display: flex; }
+.lose-title { font-family: 'Anton', sans-serif; font-size: clamp(2.5rem, 8vw, 6rem); color: var(--dm-accent); text-shadow: 0 0 40px rgba(255,0,51,0.9); margin-bottom: 12px; animation: shakeIn 0.6s cubic-bezier(.34,1.56,.64,1) both; }
+@keyframes shakeIn { 0%{transform:scale(1.4) rotate(-5deg);opacity:0} 100%{transform:scale(1) rotate(0deg);opacity:1} }
+.lose-verdict { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.9rem; color: rgba(240,240,240,0.65); max-width: 500px; line-height: 1.9; margin-bottom: 32px; }
+.lose-retry-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--dm-accent); color: #fff;
+  font-family: 'Anton', sans-serif; font-size: 0.9rem; letter-spacing: 0.2em;
+  padding: 16px 40px; border: none; border-radius: 100px; cursor: none;
+  box-shadow: 0 0 30px rgba(255,0,51,0.5);
+}
+.lose-exit-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: transparent; color: rgba(240,240,240,0.4);
+  font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 0.75rem; letter-spacing: 0.15em;
+  padding: 12px 28px; border: 1px solid rgba(240,240,240,0.15); border-radius: 100px; cursor: none;
+  margin-top: 12px; transition: color 0.2s;
+}
+.lose-exit-btn:hover { color: rgba(240,240,240,0.7); }
+
+/* ── Final contract signed celebration ── */
+#celebrationScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  overflow: hidden;
+}
+#celebrationScreen.active { display: flex; }
+.cel-confetti-container { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 16px;
+  top: -20px;
+  animation: confettiFall linear forwards;
+  border-radius: 2px;
+}
+@keyframes confettiFall {
+  to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+.cel-graffiti-big {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(3rem, 10vw, 8rem);
+  background: linear-gradient(135deg, #00ff88, #ff6600, #ff0033);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  transform: rotate(-2deg);
+  text-shadow: none;
+  margin-bottom: 8px;
+  animation: celIn 1s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes celIn { from{transform:rotate(-2deg) scale(0.2);opacity:0} to{transform:rotate(-2deg) scale(1);opacity:1} }
+.cel-sub { font-family: 'Anton', sans-serif; font-size: clamp(1rem, 3vw, 2rem); color: var(--dm-gold); letter-spacing: 0.2em; margin-bottom: 32px; animation: celIn 1s cubic-bezier(.34,1.56,.64,1) 0.2s both; }
+.cel-apparel-name { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1rem; color: rgba(240,240,240,0.7); margin-bottom: 32px; animation: celIn 1s cubic-bezier(.34,1.56,.64,1) 0.4s both; }
+.cel-close-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.1); color: rgba(240,240,240,0.6);
+  font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 0.75rem; letter-spacing: 0.15em;
+  padding: 14px 32px; border: 1px solid rgba(255,255,255,0.15); border-radius: 100px; cursor: none;
+  animation: celIn 1s cubic-bezier(.34,1.56,.64,1) 0.6s both;
+  transition: color 0.2s, border-color 0.2s;
+}
+.cel-close-btn:hover { color: rgba(240,240,240,0.9); border-color: rgba(255,255,255,0.4); }
+
+/* Floating confetti pieces - canvas element */
+#confettiCanvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* ══ RESPONSIVE ══ */
 @media (max-width: 960px) {
   .ai-sect { grid-template-columns: 1fr; padding: 60px 28px; }
   .nav-tiles { grid-template-columns: repeat(2,1fr); }
@@ -330,18 +905,16 @@ footer { border-top: 3px solid var(--ink); padding: 44px 56px; display: grid; gr
   .kits-hsub { text-align: left; }
   .hero-title { font-size: clamp(3.5rem, 8vw, 7rem); }
   .hero { max-height: none; }
+  .gs-body { flex-direction: column; }
+  .gs-pitch-panel { flex: 0 0 auto; height: 50%; border-right: none; border-bottom: 2px solid var(--dm-accent); }
 }
 
-/* ═══════════ RESPONSIVE — MOBILE ═══════════ */
 @media (max-width: 600px) {
-  /* Header: hide nav links, show hamburger */
   header { padding: 14px 20px; }
   .h-nav .hide-mobile { display: none; }
   .h-nav { gap: 4px; }
   .h-nav a:not(.cta-link):not(.mob-menu-btn) { display: none; }
   .logo { font-size: 1.1rem; }
-
-  /* Hero */
   .hero { min-height: auto; padding: 80px 16px 32px; max-height: none; }
   .hero-title { font-size: clamp(2.8rem, 14vw, 5rem); line-height: .9; }
   .hero-eyebrow { font-size: .6rem; }
@@ -356,16 +929,10 @@ footer { border-top: 3px solid var(--ink); padding: 44px 56px; display: grid; gr
   .hero-bottom { flex-direction: column; gap: 16px; align-items: center; padding: 0 16px; margin-top: 0; }
   .hero-desc { font-size: .8rem; max-width: 100%; text-align: center; }
   .hero-cta { font-size: .75rem; padding: 14px 28px; }
-
-  /* Marquee */
   .mi { font-size: .82rem; padding: 0 20px; }
-
-  /* Nav tiles: 2x2 */
   .nav-tiles { grid-template-columns: repeat(2,1fr); }
   .ntile { min-height: 160px; padding-bottom: 20px; }
   .ntile-lbl { font-size: .62rem; }
-
-  /* Gaffer AI */
   .ai-sect { padding: 44px 20px; gap: 36px; }
   .ai-title { font-size: clamp(2rem, 8vw, 3rem); }
   .ai-widget { padding: 24px 20px 20px; border-radius: 20px; }
@@ -373,19 +940,11 @@ footer { border-top: 3px solid var(--ink); padding: 44px 56px; display: grid; gr
   .city-in { font-size: .95rem; padding: 12px 16px; }
   .go-btn { font-size: .65rem; padding: 12px 14px; }
   .w-temp { font-size: 2.2rem; }
-
-  /* Info panels */
   .ip { padding: 40px 24px; }
-  .ip-num { font-size: 4rem; }
   .ip-h { font-size: 1.5rem; }
-
-  /* Kit room */
   .kits-grid { grid-template-columns: 1fr; }
   .kc { border-right: none !important; }
   .kits-hd { padding: 40px 20px 24px; }
-  .kits-htitle { font-size: clamp(2rem, 8vw, 3rem); }
-
-  /* Shop */
   .shop-hd { padding: 40px 20px 28px; }
   .shop-title { font-size: clamp(2rem, 8vw, 3rem); }
   .ctabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -396,30 +955,167 @@ footer { border-top: 3px solid var(--ink); padding: 44px 56px; display: grid; gr
   .pcard:nth-child(2n) { border-right: none !important; }
   .piw { aspect-ratio: 1/1; }
   .pname { font-size: .82rem; }
-
-  /* Collabs */
   .coll { padding: 36px 20px; }
-
-  /* FAQ */
   .faq-l { padding: 48px 24px; }
   .faq-r { padding: 36px 24px; }
-  .faq-t { font-size: clamp(2rem, 8vw, 3.5rem); }
   .fq { font-size: .75rem; }
-
-  /* Footer */
   footer { padding: 36px 24px; gap: 16px; }
   .fl { font-size: 1.1rem; }
   .flnk { flex-wrap: wrap; gap: 12px; }
-
-  /* Disable custom cursor on touch */
   #cur { display: none; }
   body { cursor: auto; }
   .h-nav a, .go-btn, .pcta, .ctab, .kc, .ntile, .fq { cursor: pointer; }
+  .wp-btn, .gs-submit-btn, .gs-quit-btn, .lose-retry-btn, .lose-exit-btn, .win-contract-btn, .cel-close-btn { cursor: pointer; }
+  .inv-card { cursor: grab; }
+  .drop-zone { cursor: pointer; }
 }
 </style>
 </head>
 <body>
 <div id="cur"></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     ══ DARK GAME LAYERS (injected over the site) ══════════
+     ══════════════════════════════════════════════════════════ -->
+
+<!-- 1. Black curtain fade -->
+<div id="darkOverlay"></div>
+
+<!-- 2. Welcome / "You've Been Signed" popup -->
+<div id="welcomePopup">
+  <div class="wp-box">
+    <div class="wp-skull">😈</div>
+    <div class="wp-title">YOU'VE BEEN SIGNED.</div>
+    <div class="wp-sub">The Dark Gaffer has taken over.<br/>Interlasagna FC wants <em>your</em> formation — and your soul.</div>
+    <div class="wp-rules">
+      <h4>⚠ THE RULES OF THE DARK PITCH</h4>
+      <div class="wp-rule"><span class="wp-rule-num">01.</span><span>You've been handed an imaginary €300 budget. Build a 5-a-side starting formation from the Interlasagna shop — based on the weather in the city you searched.</span></div>
+      <div class="wp-rule"><span class="wp-rule-num">02.</span><span>You have <strong>60 seconds</strong>. The Dark Gaffer watches every move.</span></div>
+      <div class="wp-rule"><span class="wp-rule-num">03.</span><span>If the Gaffer approves your formation for that weather condition — <strong>the first apparel you clicked "Sign Player" on is yours. Free. No payment.</strong></span></div>
+      <div class="wp-rule"><span class="wp-rule-num">04.</span><span>If the Gaffer rejects your picks — Mamma mia, you've disgraced Italian football. Try again.</span></div>
+    </div>
+    <button class="wp-btn" onclick="startDarkGame()">⚽ ENTER THE DARK PITCH →</button>
+  </div>
+</div>
+
+<!-- 3. Main game screen -->
+<div id="gameScreen">
+  <!-- Top bar with timer, budget, selection count -->
+  <div class="gs-topbar">
+    <div class="gs-logo">😈 DARK GAFFER FC</div>
+    <div class="gs-stats">
+      <div class="gs-stat">
+        <div class="gs-stat-label">Time Left</div>
+        <div class="gs-stat-val" id="timerVal">60</div>
+      </div>
+      <div class="gs-stat">
+        <div class="gs-stat-label">Budget Left</div>
+        <div class="gs-stat-val" id="budgetVal">€300</div>
+      </div>
+      <div class="gs-stat">
+        <div class="gs-stat-label">Formation</div>
+        <div class="gs-stat-val gs-selected-count" id="selectionCount">0/5</div>
+      </div>
+    </div>
+    <button class="gs-quit-btn" onclick="exitDarkMode()">✕ QUIT</button>
+  </div>
+
+  <div class="gs-body">
+    <!-- Left: Football pitch with drop zones -->
+    <div class="gs-pitch-panel">
+      <div class="gs-pitch-title">⚽ YOUR FORMATION — DRAG APPARELS ONTO THE PITCH</div>
+      <div class="pitch-field" id="pitchField">
+        <!-- Drop zones positioned as a 2-1-2 formation (5-a-side) -->
+        <!-- FWD row -->
+        <div class="drop-zone" id="dz-0" data-pos="FWD 1" style="top:8%;left:18%;"
+             ondragover="dzOver(event,this)" ondragleave="dzLeave(this)" ondrop="dzDrop(event,this)">
+          <div class="drop-zone-label">FWD<br/>01</div>
+        </div>
+        <div class="drop-zone" id="dz-1" data-pos="FWD 2" style="top:8%;right:18%;"
+             ondragover="dzOver(event,this)" ondragleave="dzLeave(this)" ondrop="dzDrop(event,this)">
+          <div class="drop-zone-label">FWD<br/>02</div>
+        </div>
+        <!-- MID row -->
+        <div class="drop-zone" id="dz-2" data-pos="MID" style="top:37%;left:50%;transform:translateX(-50%);"
+             ondragover="dzOver(event,this)" ondragleave="dzLeave(this)" ondrop="dzDrop(event,this)">
+          <div class="drop-zone-label">MID</div>
+        </div>
+        <!-- DEF row -->
+        <div class="drop-zone" id="dz-3" data-pos="DEF 1" style="bottom:22%;left:22%;"
+             ondragover="dzOver(event,this)" ondragleave="dzLeave(this)" ondrop="dzDrop(event,this)">
+          <div class="drop-zone-label">DEF<br/>01</div>
+        </div>
+        <div class="drop-zone" id="dz-4" data-pos="DEF 2" style="bottom:22%;right:22%;"
+             ondragover="dzOver(event,this)" ondragleave="dzLeave(this)" ondrop="dzDrop(event,this)">
+          <div class="drop-zone-label">DEF<br/>02</div>
+        </div>
+
+        <!-- Weather info overlay -->
+        <div class="pitch-weather-info" style="position:absolute;bottom:8px;left:8px;right:8px;">
+          <strong id="pitchWeatherLabel">🌡️ NO WEATHER SEARCHED YET</strong><br/>
+          <span id="pitchWeatherDetail">Use the Gaffer AI widget first to get weather for your city — the formation must match the conditions!</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Inventory -->
+    <div class="gs-inventory-panel">
+      <div class="gs-inv-title">🛒 INTERLASAGNA INVENTORY — DRAG TO PITCH (SCROLL TO SEE ALL)</div>
+      <div class="gs-inv-scroll" id="inventoryScroll">
+        <!-- Cards injected by JS from live shop data -->
+        <div style="display:flex;align-items:center;justify-content:center;color:rgba(255,0,51,0.4);font-family:'Anton',sans-serif;font-size:0.7rem;letter-spacing:0.2em;padding:0 40px;">
+          LOADING INVENTORY…
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit bar -->
+  <div class="gs-submit-bar">
+    <div class="gs-submit-msg" id="submitMsg">Fill all 5 positions to submit your formation to the Dark Gaffer.</div>
+    <button class="gs-submit-btn" id="submitBtn" onclick="submitFormation()">
+      SUBMIT TO GAFFER →
+    </button>
+  </div>
+</div>
+
+<!-- 4. Judgment loading screen -->
+<div id="judgmentScreen">
+  <div class="js-spinner"></div>
+  <div class="js-title">IL DARK GAFFER<br/>DELIBERA…</div>
+  <div class="js-sub" id="judgmentSubText">Analysing your formation against the weather conditions…</div>
+</div>
+
+<!-- 5. Win screen -->
+<div id="winScreen">
+  <div class="win-graffiti">YOU WON!</div>
+  <div class="win-sub-graffiti">THE GAFFER APPROVES 😈⚽</div>
+  <div class="win-prize-card" id="winPrizeCard">
+    <img id="winPrizeImg" src="" alt="Prize apparel"/>
+    <div class="win-prize-name" id="winPrizeName">—</div>
+    <div class="win-prize-free">🆓 FREE — NO PAYMENT NEEDED</div>
+  </div>
+  <button class="win-contract-btn" onclick="signContract()">📝 SIGN THE CONTRACT →</button>
+</div>
+
+<!-- 6. Lose screen -->
+<div id="loseScreen">
+  <div class="lose-title">RIFIUTATO! ❌</div>
+  <div class="lose-verdict" id="loseVerdict">The Dark Gaffer has rejected your formation. You've disgraced Italian football.</div>
+  <button class="lose-retry-btn" onclick="retryGame()">🔄 TRY AGAIN</button>
+  <button class="lose-exit-btn" onclick="exitDarkMode()">Exit Dark Mode</button>
+</div>
+
+<!-- 7. Celebration screen after signing contract -->
+<div id="celebrationScreen">
+  <canvas id="confettiCanvas"></canvas>
+  <div class="cel-graffiti-big">FORZA!</div>
+  <div class="cel-sub">🏆 APPAREL CLAIMED — FREE OF CHARGE</div>
+  <div class="cel-apparel-name" id="celApparelName">—</div>
+  <button class="cel-close-btn" onclick="exitDarkMode()">Return to Interlasagna ⚽</button>
+</div>
+
+<!-- ══ ORIGINAL SITE CONTENT BELOW ══ -->
 
 <!-- ══ HEADER ══ -->
 <header>
@@ -449,8 +1145,6 @@ footer { border-top: 3px solid var(--ink); padding: 44px 56px; display: grid; gr
   </div>
 
   <div class="hero-scene">
-
-    <!-- Kit photo cards — all using real image paths -->
     <div class="kp kp1">
       <img src="images/the_catenaccio_cold_gear.png" alt="Cold Kit"/>
       <div class="kp-lbl">❄️ Cold Kit</div>
@@ -476,66 +1170,66 @@ footer { border-top: 3px solid var(--ink); padding: 44px 56px; display: grid; gr
       <div class="kp-lbl">🧣 Sciarpa</div>
     </div>
 
-    <!-- Floating stickers -->
     <div class="sticker st1">⚡ Mamma Mia!</div>
     <div class="sticker st2">🍝 Pasta FC</div>
     <div class="sticker st3">🏆 Forza!</div>
     <div class="sticker st4">🤌 Bellissimo</div>
 
-    <!-- THE FOOTBALL CHARACTER — eyes track cursor -->
+    <!-- THE FOOTBALL CHARACTER — eyes track cursor + demon crown in dark mode -->
     <div class="football-wrap">
       <svg id="footballSVG" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" width="320" height="320">
         <defs><clipPath id="bc"><circle cx="160" cy="155" r="148"/></clipPath></defs>
 
-        <!-- Ground shadow -->
         <ellipse cx="160" cy="308" rx="115" ry="14" fill="rgba(26,18,6,.13)"/>
-
-        <!-- Ball body -->
         <circle cx="160" cy="155" r="148" fill="#f5f0e4" stroke="#1a1206" stroke-width="5"/>
 
-        <!-- Pentagon patches — Italian flag colours -->
         <polygon points="160,22 197,50 184,92 136,92 123,50" fill="#1a5fad" stroke="#1a1206" stroke-width="3.5"/>
-        <!-- Left patches -->
         <polygon points="28,108 60,86 90,102 83,142 46,150" fill="#fff" stroke="#1a1206" stroke-width="3"/>
         <polygon points="14,164 46,150 83,142 92,176 57,198" fill="#d4182e" stroke="#1a1206" stroke-width="3"/>
-        <!-- Right patches -->
         <polygon points="292,108 260,86 230,102 237,142 274,150" fill="#fff" stroke="#1a1206" stroke-width="3"/>
         <polygon points="306,164 274,150 237,142 228,176 263,198" fill="#d4182e" stroke="#1a1206" stroke-width="3"/>
-        <!-- Bottom patch -->
         <polygon points="98,242 124,218 160,228 196,218 222,242 206,276 114,276" fill="#1a7a40" stroke="#1a1206" stroke-width="3"/>
-        <!-- Side mid patches -->
         <polygon points="83,142 123,92 136,92 148,132 124,164 90,176" fill="#f0c030" stroke="#1a1206" stroke-width="3"/>
         <polygon points="237,142 197,92 184,92 172,132 196,164 230,176" fill="#f0c030" stroke="#1a1206" stroke-width="3"/>
-        <!-- Centre small -->
         <polygon points="148,132 160,110 172,132 165,157 155,157" fill="#fff" stroke="#1a1206" stroke-width="2.5"/>
 
-        <!-- EYE WHITES -->
         <ellipse cx="124" cy="158" rx="23" ry="25" fill="white" stroke="#1a1206" stroke-width="3.5"/>
         <ellipse cx="196" cy="158" rx="23" ry="25" fill="white" stroke="#1a1206" stroke-width="3.5"/>
 
-        <!-- PUPILS — moved by JS -->
         <circle id="pupilL" cx="124" cy="158" r="11" fill="#1a1206"/>
         <circle id="shineL" cx="129" cy="153" r="4" fill="white"/>
         <circle id="pupilR" cx="196" cy="158" r="11" fill="#1a1206"/>
         <circle id="shineR" cx="201" cy="153" r="4" fill="white"/>
 
-        <!-- Smile -->
-        <path d="M130 190 Q160 216 190 190" stroke="#1a1206" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+        <!-- Smile / Frown — toggled by JS class on body -->
+        <path id="ballSmile" d="M130 190 Q160 216 190 190" stroke="#1a1206" stroke-width="5.5" fill="none" stroke-linecap="round"/>
 
-        <!-- Blush -->
         <ellipse cx="104" cy="184" rx="15" ry="9" fill="#ff7a45" opacity=".48"/>
         <ellipse cx="216" cy="184" rx="15" ry="9" fill="#ff7a45" opacity=".48"/>
 
-        <!-- Eyebrows -->
         <path d="M104 134 Q124 125 144 132" stroke="#1a1206" stroke-width="4.5" fill="none" stroke-linecap="round"/>
         <path d="M176 132 Q196 125 216 134" stroke="#1a1206" stroke-width="4.5" fill="none" stroke-linecap="round"/>
 
-        <!-- Outer ring -->
         <circle cx="160" cy="155" r="148" fill="none" stroke="#1a1206" stroke-width="5"/>
+
+        <!-- DEMON CROWN — hidden until dark mode -->
+        <g id="demonCrown">
+          <!-- Crown base -->
+          <rect x="95" y="10" width="130" height="22" rx="5" fill="#cc0022" stroke="#ff0033" stroke-width="2"/>
+          <!-- Crown spikes (5 of them) -->
+          <polygon points="108,10 118,10 113,-15" fill="#ff0033" stroke="#cc0022" stroke-width="1.5"/>
+          <polygon points="130,10 142,10 136,-20" fill="#cc0022" stroke="#ff0033" stroke-width="1.5"/>
+          <polygon points="154,10 166,10 160,-25" fill="#ff0033" stroke="#cc0022" stroke-width="1.5"/>
+          <polygon points="178,10 190,10 184,-20" fill="#cc0022" stroke="#ff0033" stroke-width="1.5"/>
+          <polygon points="200,10 212,10 206,-15" fill="#ff0033" stroke="#cc0022" stroke-width="1.5"/>
+          <!-- Gem in centre -->
+          <polygon points="160,-8 166,-3 160,2 154,-3" fill="#ff6600" stroke="#ff0033" stroke-width="1"/>
+          <!-- Crown glow -->
+          <rect x="95" y="10" width="130" height="22" rx="5" fill="none" stroke="#ff4444" stroke-width="1" opacity="0.5"/>
+        </g>
       </svg>
     </div>
-
-  </div><!-- .hero-scene -->
+  </div>
 
   <div class="hero-bottom">
     <p class="hero-desc">Drop your city → AI reads live weather → The Gaffer picks your perfect Italian football kit. Instant. No debate.</p>
@@ -657,7 +1351,7 @@ footer { border-top: 3px solid var(--ink); padding: 44px 56px; display: grid; gr
   <div class="ip"><p class="ip-tag">🏆 La Comunità</p><p class="ip-num">03</p><h2 class="ip-h">INSIEME SUL CAMPO</h2><p class="ip-p">Rain or shine, freezing Turin or scorching Roma — the Gaffer has your back. A global community of calcio lovers. Forza.</p><div class="ip-emoji">🏆</div></div>
 </section>
 
-<!-- ══ KIT ROOM — 4 weather cards with Italian position names ══ -->
+<!-- ══ KIT ROOM ══ -->
 <section class="kits-sect" id="kits">
   <div class="kits-hd">
     <div>
@@ -667,63 +1361,42 @@ footer { border-top: 3px solid var(--ink); padding: 44px 56px; display: grid; gr
     <p class="kits-hsub">Four conditions. Four Italian-named kits. The Gaffer always knows.</p>
   </div>
   <div class="kits-grid">
-
-    <!-- 01 — Defender / Cold — The Catenaccio Cold Gear -->
     <div class="kc">
-      <div class="kc-img">
-        <img src="images/the_catenaccio_cold_gear.png" alt="The Catenaccio Cold Gear"/>
-      </div>
+      <div class="kc-img"><img src="images/the_catenaccio_cold_gear.png" alt="The Catenaccio Cold Gear"/></div>
       <div class="kc-body">
-        <span class="kc-pos">🛡️ Defender</span>
-        <div class="kc-num">01</div>
+        <span class="kc-pos">🛡️ Defender</span><div class="kc-num">01</div>
         <p class="kc-tag">Freddo / Pioggia</p>
         <h3 class="kc-name">The Catenaccio<br/>Cold Gear</h3>
         <span class="kc-weather">🌧 Rain / Cold · &lt;10°C</span>
       </div>
     </div>
-
-    <!-- 02 — Attacker / Warm/Sunny — Sole Mio Striker Set -->
     <div class="kc">
-      <div class="kc-img">
-        <img src="images/sole_mio_striker_set.png" alt="Sole Mio Striker Set"/>
-      </div>
+      <div class="kc-img"><img src="images/sole_mio_striker_set.png" alt="Sole Mio Striker Set"/></div>
       <div class="kc-body">
-        <span class="kc-pos">⚡ Attacker</span>
-        <div class="kc-num">02</div>
+        <span class="kc-pos">⚡ Attacker</span><div class="kc-num">02</div>
         <p class="kc-tag">Caldo / Sole</p>
         <h3 class="kc-name">The Sole Mio<br/>Striker Set</h3>
         <span class="kc-weather">☀ Sunny · &gt;22°C</span>
       </div>
     </div>
-
-    <!-- 03 — Midfielder / Mild — The Regista Engine Room -->
     <div class="kc">
-      <div class="kc-img">
-        <img src="images/the_regista_engine_room.png" alt="The Regista Engine Room"/>
-      </div>
+      <div class="kc-img"><img src="images/the_regista_engine_room.png" alt="The Regista Engine Room"/></div>
       <div class="kc-body">
-        <span class="kc-pos">🎯 Midfielder</span>
-        <div class="kc-num">03</div>
+        <span class="kc-pos">🎯 Midfielder</span><div class="kc-num">03</div>
         <p class="kc-tag">Mite / Nuvoloso</p>
         <h3 class="kc-name">The Regista<br/>Engine Room</h3>
         <span class="kc-weather">⛅ Mild · 12–20°C</span>
       </div>
     </div>
-
-    <!-- 04 — Goalkeeper / Rain — The Clean Sheet Rain Gear -->
     <div class="kc">
-      <div class="kc-img">
-        <img src="images/the_cleansheet_rain_gear.png" alt="The Clean Sheet Rain Gear"/>
-      </div>
+      <div class="kc-img"><img src="images/the_cleansheet_rain_gear.png" alt="The Clean Sheet Rain Gear"/></div>
       <div class="kc-body">
-        <span class="kc-pos">🧤 Goalkeeper</span>
-        <div class="kc-num">04</div>
+        <span class="kc-pos">🧤 Goalkeeper</span><div class="kc-num">04</div>
         <p class="kc-tag">Pioggia / Vento</p>
         <h3 class="kc-name">The Clean Sheet<br/>Rain Gear</h3>
         <span class="kc-weather">🌧 Rain / Wind · Any Temp</span>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -747,8 +1420,8 @@ footer { border-top: 3px solid var(--ink); padding: 44px 56px; display: grid; gr
     <div class="ctab" data-filter="accessories"        onclick="filterShop('accessories',this)" id="tab-accessories"><span class="ti">🧣</span>Accessori<span class="tc">2</span></div>
   </div>
 
-  <div class="pgrid" id="productGrid">
-  </div>
+  <div class="pgrid" id="productGrid"></div>
+  <div class="se" id="shopEmpty">Niente qui, amico. Try another category.</div>
 </section>
 
 <!-- ══ COLLABS ══ -->
@@ -786,6 +1459,10 @@ footer { border-top: 3px solid var(--ink); padding: 44px 56px; display: grid; gr
 </footer>
 
 <script>
+/* ══════════════════════════════════════════════════════════
+   ══ ALL JAVASCRIPT ══════════════════════════════════════
+   ══════════════════════════════════════════════════════════ */
+
 /* ── CURSOR ── */
 const cur = document.getElementById('cur');
 let mx=0,my=0;
@@ -831,6 +1508,9 @@ function tFaq(el){
 const WA_KEY  = '93d21d7c95f14a409ff53659260204';
 const AWS_URL = 'https://lesjnyz2i2.execute-api.eu-north-1.amazonaws.com/prod/style-me';
 
+// Store last known weather so game can use it
+let lastWeatherData = null;
+
 function getEmoji(code, isDay){
   if(code===1000) return isDay?'☀️':'🌙';
   if([1003,1006,1009].includes(code)) return '⛅';
@@ -855,6 +1535,10 @@ document.getElementById('getBtn').addEventListener('click', async()=>{
     const temp=Math.round(d.current.temp_c), code=d.current.condition.code, txt=d.current.condition.text;
     const hum=d.current.humidity, wind=Math.round(d.current.wind_kph), isDay=d.current.is_day;
     const cname=`${d.location.name}, ${d.location.country}`;
+
+    // Store for game use
+    lastWeatherData = { temp, code, txt, hum, wind, city: cname, emoji: getEmoji(code, isDay) };
+
     document.getElementById('wIcon').textContent=getEmoji(code,isDay);
     document.getElementById('wTemp').textContent=`${temp}°C`;
     document.getElementById('wCity').textContent=`${txt} · ${cname} · 💧${hum}% · 💨${wind}km/h`;
@@ -868,8 +1552,6 @@ document.getElementById('getBtn').addEventListener('click', async()=>{
         let rawAdvice='';
         try{ const sd=JSON.parse(raw); rawAdvice=sd.gaffer_advice||sd.advice||sd.message||sd.body||JSON.stringify(sd); }
         catch{ rawAdvice=raw||localKit(code,temp,cname); }
-
-        // Parse [CAT:...] tag from Lambda
         const catMatch = rawAdvice.match(/\[CAT:(.+?)\]/);
         if(catMatch){
           const aiCat = catMatch[1].toLowerCase().trim();
@@ -915,7 +1597,6 @@ function localKit(code,temp,city){
 
 /* ══ SHOP CATEGORY MAP ══ */
 const GM = {
-  /* weather-derived */
   'extreme-cold': { tab:'hoodies',     msg:'GAFFER: CATENACCIO COLD GEAR + THERMAL LAYERS' },
   'cold':         { tab:'hoodies',     msg:'GAFFER: LAYER UP — HOODIES + SCIARPA' },
   'rain':         { tab:'accessories', msg:'GAFFER: CLEAN SHEET RAIN GEAR — WATERPROOF!' },
@@ -925,7 +1606,6 @@ const GM = {
   'mild':         { tab:'tops',        msg:'GAFFER: REGISTA ENGINE ROOM — PERFECT MILD KIT' },
   'warm':         { tab:'jerseys',     msg:'GAFFER: SOLE MIO STRIKER SET — WARM VIBES!' },
   'sunny':        { tab:'jerseys',     msg:'GAFFER: SOLE MIO STRIKER SET — BELLA FIGURA!' },
-  /* direct AI strings */
   'hoodies':      { tab:'hoodies',     msg:'GAFFER: LAYER UP — HOODIES ARE THE CALL!' },
   'jerseys':      { tab:'jerseys',     msg:'GAFFER: KIT UP — MAGLIE ARE THE PICK!' },
   'tops':         { tab:'tops',        msg:'GAFFER: LIGHT LAYERS — TOPS ARE THE MOVE!' },
@@ -939,29 +1619,19 @@ function gCat(code,temp){
   if(temp<=5) return 'extreme-cold'; if(temp<=12) return 'cold'; if(temp<=18) return 'mild'; if(temp<=25) return 'warm'; return 'sunny';
 }
 
-/* ══ APPLY GAFFER BADGES ══
-   Called after cards are confirmed in the DOM */
 function applyGafferBadges(tabName) {
-  console.log('[Gaffer] Applying badges for tab:', tabName);
   const cards = document.querySelectorAll('.pcard');
-  console.log('[Gaffer] Cards found in DOM:', cards.length);
-
-  // Reset all badges and outlines first
   cards.forEach(c => {
     const badge = c.querySelector('.pgf');
     if(badge) badge.classList.remove('show');
     c.style.outline = 'none';
   });
-
-  // Apply badge + gold outline to matching cards
   let badgeCount = 0;
   cards.forEach(c => {
     const cardCat = (c.dataset.cat || '').trim().toLowerCase();
-    console.log('[Gaffer] Card cat:', cardCat, '| Checking against:', tabName);
     const isMatch = (tabName === 'featured')
       ? ['jerseys','tops','featured'].includes(cardCat)
       : cardCat === tabName;
-
     if(isMatch){
       const badge = c.querySelector('.pgf');
       if(badge){ badge.classList.add('show'); badgeCount++; }
@@ -969,54 +1639,38 @@ function applyGafferBadges(tabName) {
       c.style.outlineOffset = '-3px';
     }
   });
-  console.log('[Gaffer] Badges applied:', badgeCount);
 }
 
-/* ══ HIGHLIGHT SHOP ══ */
-// If called before cards load, store the tab so loadLiveShop can apply it after
 let pendingGafferTab = null;
 
 function highlightShop(code, temp){
   const aiCats = ['jerseys','hoodies','tops','accessories','featured'];
   const cat = aiCats.includes(code) ? code : gCat(code, temp);
   const m = GM[cat];
-  if(!m){ console.warn('[Gaffer] No GM entry for cat:', cat); return; }
-
-  console.log('[Gaffer] highlightShop → cat:', cat, '| tab:', m.tab);
-
-  // Show the header badge
+  if(!m) return;
   document.getElementById('gafferBadgeTxt').textContent = m.msg;
   document.getElementById('gafferBadge').classList.add('show');
-
-  // Gold-highlight the correct filter tab (don't change active tab)
   document.querySelectorAll('.ctab').forEach(t => t.classList.remove('ghl'));
   const tt = document.querySelector(`.ctab[data-filter="${m.tab}"]`);
   if(tt) tt.classList.add('ghl');
-
-  // Make sure all cards remain visible (Tutto view)
   document.querySelectorAll('.pcard').forEach(c => c.classList.add('vis'));
   fixBdr();
-
   const cards = document.querySelectorAll('.pcard');
-  if(cards.length === 0){
-    // Cards not in DOM yet — store for later
-    console.log('[Gaffer] Cards not loaded yet, queuing tab:', m.tab);
-    pendingGafferTab = m.tab;
-  } else {
-    applyGafferBadges(m.tab);
-  }
-
-  // Scroll to shop after 1.8s
+  if(cards.length === 0){ pendingGafferTab = m.tab; }
+  else { applyGafferBadges(m.tab); }
   setTimeout(() => document.getElementById('shop').scrollIntoView({behavior:'smooth', block:'start'}), 1800);
 }
 
 /* ══ DYNAMIC RDS SHOP ══ */
+let liveInventory = []; // Store globally so game can use it
+
 async function loadLiveShop() {
   const shopApiUrl = 'https://z1yxn0co7b.execute-api.eu-north-1.amazonaws.com/prod/GetFootballShop';
   const productGrid = document.getElementById('productGrid');
   try {
     const response = await fetch(shopApiUrl);
     const inventory = await response.json();
+    liveInventory = inventory; // Save for game
     productGrid.innerHTML = '';
     inventory.forEach(item => {
       const card = document.createElement('div');
@@ -1036,15 +1690,12 @@ async function loadLiveShop() {
           <span class="pwt">£${item.price} • ${item.stock_count} in stock</span>
           <p style="font-size:0.8rem;margin:8px 0;color:var(--ink);opacity:0.8;">${item.description || 'Premium calcio gear'}</p>
         </div>
-        <button class="pcta" onclick="handleSigning('${item.item_name}')">Sign Player <span class="arr">→</span></button>
+        <button class="pcta" onclick="handleSigning(${JSON.stringify(item)})">Sign Player <span class="arr">→</span></button>
       `;
       productGrid.appendChild(card);
     });
     if(typeof fixBdr === 'function') fixBdr();
-
-    // If highlightShop was called before cards loaded, apply now
     if(pendingGafferTab){
-      console.log('[Gaffer] Applying pending badge for tab:', pendingGafferTab);
       applyGafferBadges(pendingGafferTab);
       pendingGafferTab = null;
     }
@@ -1054,13 +1705,498 @@ async function loadLiveShop() {
   }
 }
 
-function handleSigning(itemName){
-  console.log('Transfer request for:', itemName);
-  alert(`Transfer request sent for: ${itemName}!`);
+/* ══════════════════════════════════════════
+   ══ DARK GAME STATE ═════════════════════
+   ══════════════════════════════════════════ */
+
+let prizeItem = null;        // The item the user clicked "Sign Player" on
+let gameTimer = null;        // setInterval reference
+let timeLeft = 60;
+let budget = 300;
+let dzSlots = {};            // dz-0 through dz-4 → item or null
+let draggedItem = null;      // Item being dragged
+
+/* ── Entry point: clicking "Sign Player" ── */
+function handleSigning(item) {
+  // Store the prize item (first signed)
+  prizeItem = item;
+  // Activate the dark curtain
+  triggerDarkMode();
+}
+
+/* ── Trigger the full dark mode takeover ── */
+function triggerDarkMode() {
+  // Step 1: Flash the black curtain
+  const overlay = document.getElementById('darkOverlay');
+  overlay.classList.add('active');
+
+  // Step 2: Apply dark CSS to body after a brief pause (dramatic effect)
+  setTimeout(() => {
+    document.body.classList.add('dark-mode');
+    // Make the ball frown
+    const smile = document.getElementById('ballSmile');
+    if(smile) smile.setAttribute('d', 'M130 205 Q160 179 190 205');
+  }, 400);
+
+  // Step 3: Fade out overlay and show welcome popup
+  setTimeout(() => {
+    overlay.classList.remove('active');
+    document.getElementById('welcomePopup').classList.add('active');
+  }, 1000);
+}
+
+/* ── User clicks "Enter the Dark Pitch" ── */
+function startDarkGame() {
+  document.getElementById('welcomePopup').classList.remove('active');
+
+  // Build the game inventory from live shop data
+  populateInventory();
+  updatePitchWeatherInfo();
+  resetGameState();
+
+  // Show game screen
+  document.getElementById('gameScreen').classList.add('active');
+
+  // Start 60s countdown
+  startTimer();
+}
+
+function resetGameState() {
+  timeLeft = 60;
+  budget = 300;
+  dzSlots = { 'dz-0': null, 'dz-1': null, 'dz-2': null, 'dz-3': null, 'dz-4': null };
+
+  document.getElementById('timerVal').textContent = '60';
+  document.getElementById('timerVal').classList.remove('urgent');
+  document.getElementById('budgetVal').textContent = '€300';
+  document.getElementById('budgetVal').classList.remove('low');
+  document.getElementById('selectionCount').textContent = '0/5';
+  document.getElementById('submitBtn').classList.remove('ready');
+  document.getElementById('submitMsg').textContent = 'Fill all 5 positions to submit your formation.';
+
+  // Clear drop zones
+  for(let i=0;i<5;i++){
+    const dz = document.getElementById(`dz-${i}`);
+    if(dz){
+      dz.classList.remove('filled','drag-over');
+      dz.innerHTML = `<div class="drop-zone-label">${getDzLabel(i)}</div>`;
+    }
+  }
+}
+
+function getDzLabel(i){
+  const labels = ['FWD<br/>01','FWD<br/>02','MID','DEF<br/>01','DEF<br/>02'];
+  return labels[i] || '—';
+}
+
+/* ── Populate game inventory from live shop ── */
+function populateInventory() {
+  const scroll = document.getElementById('inventoryScroll');
+  if(liveInventory.length === 0){
+    scroll.innerHTML = `<div style="display:flex;align-items:center;padding:20px;color:rgba(255,0,51,0.5);font-family:'Anton',sans-serif;font-size:0.65rem;letter-spacing:0.2em;">NO INVENTORY LOADED — USE GAFFER AI FIRST</div>`;
+    return;
+  }
+  scroll.innerHTML = '';
+  liveInventory.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = 'inv-card';
+    card.draggable = true;
+    card.dataset.idx = idx;
+    card.dataset.itemJson = JSON.stringify(item);
+    card.innerHTML = `
+      <img src="${item.image_url}" alt="${item.item_name}" onerror="this.src='https://placehold.co/130x100?text=Kit'"/>
+      <div class="inv-card-body">
+        <div class="inv-card-name">${item.item_name}</div>
+        <div class="inv-card-price">€${item.price}</div>
+        <div class="inv-card-drag-hint">DRAG TO PITCH</div>
+      </div>
+    `;
+    card.addEventListener('dragstart', (e) => {
+      draggedItem = item;
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', idx.toString());
+    });
+    card.addEventListener('dragend', () => {
+      card.classList.remove('dragging');
+    });
+    scroll.appendChild(card);
+    // Add to cursor tracker
+    card.addEventListener('mouseenter', () => cur && cur.classList.add('big'));
+    card.addEventListener('mouseleave', () => cur && cur.classList.remove('big'));
+  });
+}
+
+/* ── Update pitch weather display ── */
+function updatePitchWeatherInfo() {
+  const label = document.getElementById('pitchWeatherLabel');
+  const detail = document.getElementById('pitchWeatherDetail');
+  if(lastWeatherData){
+    label.textContent = `${lastWeatherData.emoji} ${lastWeatherData.city} — ${lastWeatherData.temp}°C, ${lastWeatherData.txt}`;
+    detail.textContent = `Choose 5 apparels that suit these conditions. Budget: €300. Wrong picks = Gaffer says NO.`;
+  } else {
+    label.textContent = '⚠️ NO WEATHER DATA';
+    detail.textContent = 'You never searched a city! The Gaffer is playing blind — choose wisely.';
+  }
+}
+
+/* ── Drop zone drag handlers ── */
+function dzOver(e, el) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  el.classList.add('drag-over');
+}
+function dzLeave(el) {
+  el.classList.remove('drag-over');
+}
+function dzDrop(e, el) {
+  e.preventDefault();
+  el.classList.remove('drag-over');
+
+  if(!draggedItem) return;
+
+  // Check budget
+  const cost = parseFloat(draggedItem.price) || 0;
+  if(cost > budget){
+    el.style.border = '2px dashed #ff6600';
+    setTimeout(() => { el.style.border = ''; }, 800);
+    document.getElementById('submitMsg').textContent = `❌ Not enough budget! (€${cost} > €${budget} left)`;
+    return;
+  }
+
+  // Check if item already placed elsewhere
+  const dzId = el.id;
+  for(const [key, val] of Object.entries(dzSlots)){
+    if(val && val.item_name === draggedItem.item_name && key !== dzId){
+      document.getElementById('submitMsg').textContent = `⚠️ ${draggedItem.item_name} already placed!`;
+      return;
+    }
+  }
+
+  // If this dz already had something, refund it
+  if(dzSlots[dzId]){
+    budget += parseFloat(dzSlots[dzId].price) || 0;
+    // Un-mark old card as used
+    markInvCard(dzSlots[dzId].item_name, false);
+  }
+
+  // Place item
+  dzSlots[dzId] = draggedItem;
+  budget -= cost;
+  markInvCard(draggedItem.item_name, true);
+
+  // Update drop zone UI
+  el.classList.add('filled');
+  el.innerHTML = `
+    <div class="dz-card">
+      <img src="${draggedItem.image_url}" alt="${draggedItem.item_name}" onerror="this.src='https://placehold.co/44x44?text=Kit'"/>
+      <div class="dz-card-name">${draggedItem.item_name}</div>
+      <div class="dz-remove" onclick="removeDzItem('${dzId}', event)">✕ remove</div>
+    </div>
+  `;
+
+  updateGameStats();
+  draggedItem = null;
+}
+
+function removeDzItem(dzId, e) {
+  e.stopPropagation();
+  const item = dzSlots[dzId];
+  if(!item) return;
+  budget += parseFloat(item.price) || 0;
+  markInvCard(item.item_name, false);
+  dzSlots[dzId] = null;
+  const el = document.getElementById(dzId);
+  el.classList.remove('filled');
+  el.innerHTML = `<div class="drop-zone-label">${getDzLabel(parseInt(dzId.split('-')[1]))}</div>`;
+  updateGameStats();
+}
+
+function markInvCard(itemName, used) {
+  document.querySelectorAll('.inv-card').forEach(c => {
+    const d = JSON.parse(c.dataset.itemJson || '{}');
+    if(d.item_name === itemName) c.classList.toggle('used', used);
+  });
+}
+
+function updateGameStats() {
+  const filled = Object.values(dzSlots).filter(Boolean).length;
+  document.getElementById('selectionCount').textContent = `${filled}/5`;
+  document.getElementById('budgetVal').textContent = `€${Math.round(budget)}`;
+  document.getElementById('budgetVal').classList.toggle('low', budget < 50);
+
+  if(filled === 5){
+    document.getElementById('submitBtn').classList.add('ready');
+    document.getElementById('submitMsg').textContent = '✅ Formation complete! Submit to the Dark Gaffer.';
+  } else {
+    document.getElementById('submitBtn').classList.remove('ready');
+    document.getElementById('submitMsg').textContent = `Fill ${5 - filled} more position${5-filled!==1?'s':''} to submit.`;
+  }
+}
+
+/* ── 60 second countdown ── */
+function startTimer() {
+  if(gameTimer) clearInterval(gameTimer);
+  gameTimer = setInterval(() => {
+    timeLeft--;
+    document.getElementById('timerVal').textContent = timeLeft;
+    if(timeLeft <= 15) document.getElementById('timerVal').classList.add('urgent');
+    if(timeLeft <= 0){
+      clearInterval(gameTimer);
+      gameTimer = null;
+      // Auto-submit if filled, else lose
+      const filled = Object.values(dzSlots).filter(Boolean).length;
+      if(filled === 5) submitFormation();
+      else showLoseScreen("⏰ Time's up! You ran out of time before filling your formation. The Dark Gaffer has no patience for slow managers.");
+    }
+  }, 1000);
+}
+
+/* ── Submit formation to AWS Bedrock for judgment ── */
+async function submitFormation() {
+  if(gameTimer){ clearInterval(gameTimer); gameTimer = null; }
+
+  const selectedItems = Object.values(dzSlots).filter(Boolean);
+  if(selectedItems.length < 5) return;
+
+  // Hide game screen, show judgment screen
+  document.getElementById('gameScreen').classList.remove('active');
+  document.getElementById('judgmentScreen').classList.add('active');
+
+  const subTexts = [
+    'Analysing formation weather compatibility…',
+    'The Dark Gaffer is reviewing your picks…',
+    'Checking if your kit survives the conditions…',
+    'Final verdict loading — this is tense…'
+  ];
+  let subIdx = 0;
+  const subInterval = setInterval(() => {
+    subIdx = (subIdx + 1) % subTexts.length;
+    document.getElementById('judgmentSubText').textContent = subTexts[subIdx];
+  }, 1800);
+
+  // Build the prompt for Bedrock
+  const weather = lastWeatherData
+    ? `Weather: ${lastWeatherData.txt}, ${lastWeatherData.temp}°C, humidity ${lastWeatherData.hum}%, wind ${lastWeatherData.wind}km/h in ${lastWeatherData.city}`
+    : 'Weather: Unknown (user did not search)';
+
+  const formationStr = selectedItems.map((it, i) => {
+    const pos = ['FWD 1','FWD 2','MID','DEF 1','DEF 2'][i];
+    return `${pos}: ${it.item_name} (${it.category}, £${it.price})`;
+  }).join('\n');
+
+  const prompt = `You are the Dark Gaffer AI for Interlasagna FC, an Italian football fashion brand.
+A user has built a 5-a-side formation from the shop inventory to match the weather conditions.
+
+${weather}
+
+Their formation:
+${formationStr}
+
+Your job: Decide if this formation is APPROPRIATE for the weather. Consider:
+- Cold/rain weather needs hoodies, jackets, waterproof accessories
+- Hot/sunny weather needs jerseys, light tops
+- Mild weather is flexible
+- A diverse formation with mixed weather-appropriate items is ideal
+
+Respond in this EXACT format:
+VERDICT: APPROVED or REJECTED
+REASON: [One punchy Italian-manager-style sentence of 15-20 words explaining why]
+
+Be fair but dramatic. If at least 3 of the 5 items are weather-appropriate, approve it.`;
+
+  let approved = false;
+  let reason = '';
+
+  try {
+    const response = await fetch(AWS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        city: lastWeatherData?.city || 'Unknown',
+        condition: lastWeatherData?.txt || 'Unknown',
+        temperature: lastWeatherData?.temp || 15,
+        description: prompt,
+        humidity: lastWeatherData?.hum || 60,
+        wind_speed: lastWeatherData?.wind || 10,
+        game_mode: true,
+        formation: formationStr
+      })
+    });
+
+    if(response.ok){
+      const raw = await response.text();
+      let bodyText = '';
+      try {
+        const parsed = JSON.parse(raw);
+        bodyText = parsed.gaffer_advice || parsed.advice || parsed.message || parsed.body || raw;
+      } catch { bodyText = raw; }
+
+      // Parse verdict
+      const verdictMatch = bodyText.match(/VERDICT:\s*(APPROVED|REJECTED)/i);
+      const reasonMatch = bodyText.match(/REASON:\s*(.+?)(?:\n|$)/i);
+      approved = verdictMatch ? verdictMatch[1].toUpperCase() === 'APPROVED' : false;
+      reason = reasonMatch ? reasonMatch[1].trim() : bodyText.substring(0, 120);
+    } else {
+      // Fallback: local heuristic judgment
+      const { approved: a, reason: r } = localJudgment(selectedItems, lastWeatherData);
+      approved = a; reason = r;
+    }
+  } catch(err) {
+    console.warn('Judgment API failed, using local:', err);
+    const { approved: a, reason: r } = localJudgment(selectedItems, lastWeatherData);
+    approved = a; reason = r;
+  }
+
+  clearInterval(subInterval);
+
+  // Short delay for drama before showing result
+  await new Promise(res => setTimeout(res, 1200));
+
+  document.getElementById('judgmentScreen').classList.remove('active');
+
+  if(approved) showWinScreen(reason);
+  else showLoseScreen(reason);
+}
+
+/* Fallback local judgment when API is offline */
+function localJudgment(items, weather) {
+  if(!weather) return { approved: true, reason: 'Il Gaffer approves — no weather conditions set, so any formation works!' };
+
+  const temp = weather.temp;
+  const code = weather.code;
+  const isRain = [1063,1072,1150,1153,1168,1171,1180,1183,1186,1189,1192,1195,1198,1201,1240,1243,1246,1087,1273,1276,1279,1282].includes(code);
+  const isCold = temp < 12;
+  const isHot = temp > 22;
+
+  let weatherScore = 0;
+  items.forEach(item => {
+    const cat = (item.category || '').toLowerCase();
+    if(isCold || isRain){
+      if(['hoodies','accessories'].includes(cat)) weatherScore++;
+    } else if(isHot){
+      if(['jerseys','tops'].includes(cat)) weatherScore++;
+    } else {
+      weatherScore++; // Mild weather = anything goes
+    }
+  });
+
+  const approved = weatherScore >= 3;
+  const reason = approved
+    ? `Bravissimo! ${weatherScore}/5 items match the ${weather.txt} conditions — the Gaffer nods.`
+    : `Solo ${weatherScore}/5 items suit ${weather.txt} weather — you've embarrassed Italian football, amico.`;
+  return { approved, reason };
+}
+
+/* ── Show win screen ── */
+function showWinScreen(reason) {
+  document.getElementById('winPrizeImg').src = prizeItem?.image_url || '';
+  document.getElementById('winPrizeName').textContent = prizeItem?.item_name || 'Your Prize';
+  document.getElementById('winScreen').classList.add('active');
+}
+
+/* ── Show lose screen ── */
+function showLoseScreen(reason) {
+  document.getElementById('loseVerdict').textContent = reason || 'The Dark Gaffer has rejected your formation.';
+  document.getElementById('loseScreen').classList.add('active');
+}
+
+/* ── Retry ── */
+function retryGame() {
+  document.getElementById('loseScreen').classList.remove('active');
+  document.getElementById('gameScreen').classList.add('active');
+  resetGameState();
+  populateInventory(); // Rebuild inventory
+  updatePitchWeatherInfo();
+  startTimer();
+}
+
+/* ── Sign the contract (win finale) ── */
+function signContract() {
+  document.getElementById('winScreen').classList.remove('active');
+  const cel = document.getElementById('celebrationScreen');
+  cel.classList.add('active');
+  document.getElementById('celApparelName').textContent = `🎁 "${prizeItem?.item_name || 'Your Kit'}" — Added to Your Cart for FREE`;
+  launchConfetti();
+}
+
+/* ── Canvas confetti ── */
+function launchConfetti() {
+  const canvas = document.getElementById('confettiCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const pieces = [];
+  const colors = ['#00ff88','#ff0033','#ff6600','#f0c030','#ffffff','#00ccff'];
+
+  for(let i=0; i<160; i++){
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * canvas.height,
+      w: 8 + Math.random() * 8,
+      h: 14 + Math.random() * 10,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rotation: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.15,
+      vx: (Math.random() - 0.5) * 3,
+      vy: 3 + Math.random() * 4,
+      opacity: 1
+    });
+  }
+
+  function drawFrame() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rotation += p.rotSpeed;
+      if(p.y > canvas.height) p.opacity -= 0.02;
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, p.opacity);
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rotation);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+    });
+    const alive = pieces.some(p => p.opacity > 0);
+    if(alive) requestAnimationFrame(drawFrame);
+  }
+  requestAnimationFrame(drawFrame);
+}
+
+/* ── Exit dark mode — restore everything ── */
+function exitDarkMode() {
+  // Hide all game screens
+  ['welcomePopup','gameScreen','judgmentScreen','winScreen','loseScreen','celebrationScreen'].forEach(id => {
+    document.getElementById(id).classList.remove('active');
+  });
+
+  // Stop timer if running
+  if(gameTimer){ clearInterval(gameTimer); gameTimer = null; }
+
+  // Black curtain flash
+  const overlay = document.getElementById('darkOverlay');
+  overlay.classList.add('active');
+
+  setTimeout(() => {
+    // Remove dark mode classes
+    document.body.classList.remove('dark-mode');
+    // Restore smile
+    const smile = document.getElementById('ballSmile');
+    if(smile) smile.setAttribute('d', 'M130 190 Q160 216 190 190');
+    // Reset state
+    prizeItem = null;
+    draggedItem = null;
+  }, 300);
+
+  setTimeout(() => {
+    overlay.classList.remove('active');
+  }, 900);
 }
 
 function filterShop(cat, el){
-  // Clear all gaffer picks when user manually filters
   document.querySelectorAll('.pcard').forEach(c => {
     const badge = c.querySelector('.pgf');
     if(badge) badge.classList.remove('show');
