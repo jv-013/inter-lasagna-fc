@@ -1672,7 +1672,7 @@ async function loadLiveShop() {
     const inventory = await response.json();
     liveInventory = inventory; // Save for game
     productGrid.innerHTML = '';
-    inventory.forEach(item => {
+    inventory.forEach((item, idx) => {
       const card = document.createElement('div');
       card.className = 'pcard vis';
       const itemCat = (item.category || 'accessories').toLowerCase().trim();
@@ -1690,8 +1690,10 @@ async function loadLiveShop() {
           <span class="pwt">£${item.price} • ${item.stock_count} in stock</span>
           <p style="font-size:0.8rem;margin:8px 0;color:var(--ink);opacity:0.8;">${item.description || 'Premium calcio gear'}</p>
         </div>
-        <button class="pcta" onclick="handleSigning(${JSON.stringify(item)})">Sign Player <span class="arr">→</span></button>
+        <button class="pcta" data-item-idx="${idx}">Sign Player <span class="arr">→</span></button>
       `;
+      // Attach click via addEventListener — avoids ALL quote/apostrophe issues
+      card.querySelector('.pcta').addEventListener('click', () => handleSigning(liveInventory[idx]));
       productGrid.appendChild(card);
     });
     if(typeof fixBdr === 'function') fixBdr();
