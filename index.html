@@ -243,20 +243,20 @@ header {
 
 /* Product grid */
 .pgrid { display: grid; grid-template-columns: repeat(4,1fr); }
-.pcard { border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink); display: none; flex-direction: column; cursor: none; overflow: hidden; transition: background .2s; position: relative; background: #fff; }
+.pcard { border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink); display: none; flex-direction: column; cursor: none; transition: background .2s; position: relative; background: #fff; }
 .pcard.vis { display: flex; }
 .pcard:hover { background: var(--carta); }
 .pcard:nth-child(4n) { border-right: none; }
 .piw { width: 100%; aspect-ratio: 16/9; overflow: hidden; position: relative; background: #e2ddd4; border-bottom: 2px solid var(--ink); }
 .piw img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; transition: transform .55s cubic-bezier(.25,.46,.45,.94); }
 .pcard:hover .piw img { transform: scale(1.07); }
-.pwb { position: absolute; top: 10px; left: 10px; z-index: 2; background: var(--ink); color: var(--cream); font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .44rem; letter-spacing: .2em; text-transform: uppercase; padding: 3px 9px; border-radius: 100px; }
+.pwb { position: absolute; top: 10px; left: 10px; z-index: 3; background: var(--ink); color: var(--cream); font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .44rem; letter-spacing: .2em; text-transform: uppercase; padding: 3px 9px; border-radius: 100px; }
 .pwb.lime { background: var(--verde); }
 .pwb.gold { background: var(--oro); color: var(--ink); }
 .pwb.red  { background: var(--rosso); }
-.pgf { display: none; position: absolute; top: 10px; right: 10px; z-index: 2; background: var(--az); color: #fff; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .42rem; letter-spacing: .14em; text-transform: uppercase; padding: 3px 9px; border-radius: 100px; animation: fp .4s cubic-bezier(.34,1.56,.64,1) both; }
+.pgf { display: none; position: absolute; top: 10px; right: 10px; z-index: 10; background: var(--oro); color: var(--ink); font-family: 'Nunito', sans-serif; font-weight: 900; font-size: .42rem; letter-spacing: .14em; text-transform: uppercase; padding: 4px 10px; border-radius: 100px; border: 1.5px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); animation: fp .4s cubic-bezier(.34,1.56,.64,1) both; }
 .pgf.show { display: block; }
-@keyframes fp { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+@keyframes fp { from{transform:scale(0) rotate(-8deg);opacity:0} to{transform:scale(1) rotate(0deg);opacity:1} }
 .pb { padding: 16px 18px 18px; flex: 1; display: flex; flex-direction: column; gap: 5px; }
 .pcat { font-size: .44rem; letter-spacing: .28em; text-transform: uppercase; opacity: .32; font-weight: 700; }
 .pname { font-family: 'Anton', sans-serif; font-size: .95rem; line-height: 1.1; }
@@ -795,22 +795,17 @@ document.querySelectorAll('a,button,input,.kp,.ntile,.ctab,.pcard,.fq,.ci-itm,.k
   el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
 });
 
-/* ══════════════════════════════════════
-   FOOTBALL EYE TRACKING
-   Pupils follow cursor anywhere on page
-══════════════════════════════════════ */
+/* ══ FOOTBALL EYE TRACKING ══ */
 document.addEventListener('mousemove', function(e){
   const svg = document.getElementById('footballSVG');
   if (!svg) return;
   const rect   = svg.getBoundingClientRect();
   const scaleX = rect.width  / 320;
   const scaleY = rect.height / 320;
-
   const eyes = [
     { ecx:124, ecy:158, pid:'pupilL', sid:'shineL' },
     { ecx:196, ecy:158, pid:'pupilR', sid:'shineR' },
   ];
-
   eyes.forEach(({ecx, ecy, pid, sid}) => {
     const eyeX = rect.left + ecx * scaleX;
     const eyeY = rect.top  + ecy * scaleY;
@@ -870,13 +865,28 @@ document.getElementById('getBtn').addEventListener('click', async()=>{
       const ar=await fetch(AWS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({city:cname,condition:txt,temperature:temp,description:txt,humidity:hum,wind_speed:wind})});
       if(ar.ok){
         const raw=await ar.text();
-        try{ const sd=JSON.parse(raw); document.getElementById('kitTxt').innerHTML=sd.gaffer_advice||sd.advice||sd.message||sd.body||JSON.stringify(sd); }
-        catch{ document.getElementById('kitTxt').innerHTML=raw||localKit(code,temp,cname); }
+        let rawAdvice='';
+        try{ const sd=JSON.parse(raw); rawAdvice=sd.gaffer_advice||sd.advice||sd.message||sd.body||JSON.stringify(sd); }
+        catch{ rawAdvice=raw||localKit(code,temp,cname); }
+
+        // Parse [CAT:...] tag from Lambda
+        const catMatch = rawAdvice.match(/\[CAT:(.+?)\]/);
+        if(catMatch){
+          const aiCat = catMatch[1].toLowerCase().trim();
+          const cleanAdvice = rawAdvice.replace(/\[CAT:.+?\]/, '').trim();
+          document.getElementById('kitTxt').innerHTML = cleanAdvice;
+          highlightShop(aiCat, temp);
+        } else {
+          document.getElementById('kitTxt').innerHTML = rawAdvice;
+          highlightShop(code, temp);
+        }
         ok=true;
       }
-    } catch(e){ console.warn('Backend offline'); }
-    if(!ok) document.getElementById('kitTxt').innerHTML=localKit(code,temp,cname)+'<br/><small style="opacity:.45;font-size:.65rem;">⚠ AI offline — local kit call</small>';
-    highlightShop(code,temp);
+    } catch(e){ console.warn('Backend offline:', e); }
+    if(!ok){
+      document.getElementById('kitTxt').innerHTML=localKit(code,temp,cname)+'<br/><small style="opacity:.45;font-size:.65rem;">⚠ AI offline — local kit call</small>';
+      highlightShop(code,temp);
+    }
   } catch(e){
     sp.classList.remove('show'); wr.classList.add('show');
     document.getElementById('wIcon').textContent='⚠️';
@@ -903,17 +913,24 @@ function localKit(code,temp,city){
   return `<strong>REGISTA CONDITIONS — ${n}</strong><br/>The Regista Engine Room kit. Classic training fit: slim joggers, tee, open zip hoodie. ✅`;
 }
 
-/* ══ SHOP FILTER ══ */
+/* ══ SHOP CATEGORY MAP ══ */
 const GM = {
-  'extreme-cold': { tab:'hoodies',      msg:'GAFFER: CATENACCIO COLD GEAR + THERMAL LAYERS' },
-  'cold':         { tab:'hoodies',      msg:'GAFFER: LAYER UP — HOODIES + SCIARPA' },
-  'rain':         { tab:'featured',     msg:'GAFFER: CLEAN SHEET RAIN GEAR — WATERPROOF!' },
-  'storm':        { tab:'featured',     msg:'GAFFER: FULL COVER — CLEAN SHEET + CATENACCIO' },
-  'snow':         { tab:'hoodies',      msg:'GAFFER: THERMAL STACK — CATENACCIO + LAYERS' },
-  'fog':          { tab:'hoodies',      msg:'GAFFER: VISIBILITY — SWEATER + HOODIE' },
-  'mild':         { tab:'featured',     msg:'GAFFER: REGISTA ENGINE ROOM — PERFECT MILD KIT' },
-  'warm':         { tab:'featured',     msg:'GAFFER: SOLE MIO STRIKER SET — WARM VIBES!' },
-  'sunny':        { tab:'featured',     msg:'GAFFER: SOLE MIO STRIKER SET — BELLA FIGURA!' }
+  /* weather-derived */
+  'extreme-cold': { tab:'hoodies',     msg:'GAFFER: CATENACCIO COLD GEAR + THERMAL LAYERS' },
+  'cold':         { tab:'hoodies',     msg:'GAFFER: LAYER UP — HOODIES + SCIARPA' },
+  'rain':         { tab:'accessories', msg:'GAFFER: CLEAN SHEET RAIN GEAR — WATERPROOF!' },
+  'storm':        { tab:'accessories', msg:'GAFFER: FULL COVER — CLEAN SHEET + CATENACCIO' },
+  'snow':         { tab:'hoodies',     msg:'GAFFER: THERMAL STACK — CATENACCIO + LAYERS' },
+  'fog':          { tab:'hoodies',     msg:'GAFFER: VISIBILITY — SWEATER + HOODIE' },
+  'mild':         { tab:'tops',        msg:'GAFFER: REGISTA ENGINE ROOM — PERFECT MILD KIT' },
+  'warm':         { tab:'jerseys',     msg:'GAFFER: SOLE MIO STRIKER SET — WARM VIBES!' },
+  'sunny':        { tab:'jerseys',     msg:'GAFFER: SOLE MIO STRIKER SET — BELLA FIGURA!' },
+  /* direct AI strings */
+  'hoodies':      { tab:'hoodies',     msg:'GAFFER: LAYER UP — HOODIES ARE THE CALL!' },
+  'jerseys':      { tab:'jerseys',     msg:'GAFFER: KIT UP — MAGLIE ARE THE PICK!' },
+  'tops':         { tab:'tops',        msg:'GAFFER: LIGHT LAYERS — TOPS ARE THE MOVE!' },
+  'accessories':  { tab:'accessories', msg:'GAFFER: FINISH THE LOOK — ACCESSORI!' },
+  'featured':     { tab:'featured',    msg:'GAFFER: FEATURED PICKS — IL MEGLIO!' }
 };
 
 function gCat(code,temp){
@@ -922,61 +939,137 @@ function gCat(code,temp){
   if(temp<=5) return 'extreme-cold'; if(temp<=12) return 'cold'; if(temp<=18) return 'mild'; if(temp<=25) return 'warm'; return 'sunny';
 }
 
-/* ══ DYNAMIC RDS SHOP INTEGRATION ══ */
-async function loadLiveShop() {
-  const shopApiUrl = "https://z1yxn0co7b.execute-api.eu-north-1.amazonaws.com/prod/GetFootballShop";
-  const productGrid = document.getElementById('productGrid');
+/* ══ APPLY GAFFER BADGES ══
+   Called after cards are confirmed in the DOM */
+function applyGafferBadges(tabName) {
+  console.log('[Gaffer] Applying badges for tab:', tabName);
+  const cards = document.querySelectorAll('.pcard');
+  console.log('[Gaffer] Cards found in DOM:', cards.length);
 
+  // Reset all badges and outlines first
+  cards.forEach(c => {
+    const badge = c.querySelector('.pgf');
+    if(badge) badge.classList.remove('show');
+    c.style.outline = 'none';
+  });
+
+  // Apply badge + gold outline to matching cards
+  let badgeCount = 0;
+  cards.forEach(c => {
+    const cardCat = (c.dataset.cat || '').trim().toLowerCase();
+    console.log('[Gaffer] Card cat:', cardCat, '| Checking against:', tabName);
+    const isMatch = (tabName === 'featured')
+      ? ['jerseys','tops','featured'].includes(cardCat)
+      : cardCat === tabName;
+
+    if(isMatch){
+      const badge = c.querySelector('.pgf');
+      if(badge){ badge.classList.add('show'); badgeCount++; }
+      c.style.outline = '3px solid var(--oro)';
+      c.style.outlineOffset = '-3px';
+    }
+  });
+  console.log('[Gaffer] Badges applied:', badgeCount);
+}
+
+/* ══ HIGHLIGHT SHOP ══ */
+// If called before cards load, store the tab so loadLiveShop can apply it after
+let pendingGafferTab = null;
+
+function highlightShop(code, temp){
+  const aiCats = ['jerseys','hoodies','tops','accessories','featured'];
+  const cat = aiCats.includes(code) ? code : gCat(code, temp);
+  const m = GM[cat];
+  if(!m){ console.warn('[Gaffer] No GM entry for cat:', cat); return; }
+
+  console.log('[Gaffer] highlightShop → cat:', cat, '| tab:', m.tab);
+
+  // Show the header badge
+  document.getElementById('gafferBadgeTxt').textContent = m.msg;
+  document.getElementById('gafferBadge').classList.add('show');
+
+  // Gold-highlight the correct filter tab (don't change active tab)
+  document.querySelectorAll('.ctab').forEach(t => t.classList.remove('ghl'));
+  const tt = document.querySelector(`.ctab[data-filter="${m.tab}"]`);
+  if(tt) tt.classList.add('ghl');
+
+  // Make sure all cards remain visible (Tutto view)
+  document.querySelectorAll('.pcard').forEach(c => c.classList.add('vis'));
+  fixBdr();
+
+  const cards = document.querySelectorAll('.pcard');
+  if(cards.length === 0){
+    // Cards not in DOM yet — store for later
+    console.log('[Gaffer] Cards not loaded yet, queuing tab:', m.tab);
+    pendingGafferTab = m.tab;
+  } else {
+    applyGafferBadges(m.tab);
+  }
+
+  // Scroll to shop after 1.8s
+  setTimeout(() => document.getElementById('shop').scrollIntoView({behavior:'smooth', block:'start'}), 1800);
+}
+
+/* ══ DYNAMIC RDS SHOP ══ */
+async function loadLiveShop() {
+  const shopApiUrl = 'https://z1yxn0co7b.execute-api.eu-north-1.amazonaws.com/prod/GetFootballShop';
+  const productGrid = document.getElementById('productGrid');
   try {
     const response = await fetch(shopApiUrl);
     const inventory = await response.json();
-
-    // Clear the pitch
     productGrid.innerHTML = '';
-
     inventory.forEach(item => {
       const card = document.createElement('div');
-      // Adding 'vis' so they show up immediately
-      card.className = 'pcard vis'; 
-      // This allows your existing category filters to work
-      card.dataset.cat = item.category ? item.category.toLowerCase() : 'accessories';
-      card.dataset.gc = JSON.stringify([item.category ? item.category.toLowerCase() : 'accessories']);
-
+      card.className = 'pcard vis';
+      const itemCat = (item.category || 'accessories').toLowerCase().trim();
+      card.dataset.cat = itemCat;
+      card.dataset.gc = JSON.stringify([itemCat]);
       card.innerHTML = `
-        <div class="piw"><img src="${item.image_url}" alt="${item.item_name}" onerror="this.src='https://placehold.co/400x300?text=Image+Missing'"/></div>
-        <div class="pgf">⚽ SHOP PICK</div>
+        <div class="piw">
+          <img src="${item.image_url}" alt="${item.item_name}" onerror="this.src='https://placehold.co/400x300?text=Image+Missing'"/>
+        </div>
         <span class="pwb">${item.stock_count > 0 ? 'IN STOCK' : 'SOLD OUT'}</span>
+        <div class="pgf">⚽ GAFFER PICK</div>
         <div class="pb">
           <span class="pcat">${(item.category || 'ITEM').toUpperCase()}</span>
           <h4 class="pname">${item.item_name}</h4>
           <span class="pwt">£${item.price} • ${item.stock_count} in stock</span>
-          <p style="font-size: 0.8rem; margin: 8px 0; color: var(--ink); opacity: 0.8;">${item.description || 'Premium calcio gear'}</p>
+          <p style="font-size:0.8rem;margin:8px 0;color:var(--ink);opacity:0.8;">${item.description || 'Premium calcio gear'}</p>
         </div>
         <button class="pcta" onclick="handleSigning('${item.item_name}')">Sign Player <span class="arr">→</span></button>
       `;
       productGrid.appendChild(card);
     });
+    if(typeof fixBdr === 'function') fixBdr();
 
-    // Re-run your layout fix function to handle borders correctly
-    if (typeof fixBdr === "function") fixBdr();
-
-  } catch (err) {
-    console.error("Scouting report failed:", err);
-    productGrid.innerHTML = `<p style="padding:20px;grid-column:1/-1;text-align:center;opacity:0.5">Gaffer, the connection to the locker room is down. Check console for details.</p>`;
+    // If highlightShop was called before cards loaded, apply now
+    if(pendingGafferTab){
+      console.log('[Gaffer] Applying pending badge for tab:', pendingGafferTab);
+      applyGafferBadges(pendingGafferTab);
+      pendingGafferTab = null;
+    }
+  } catch(err) {
+    console.error('Shop load failed:', err);
+    productGrid.innerHTML = `<p style="padding:20px;grid-column:1/-1;text-align:center;opacity:0.5">Gaffer, the connection to the locker room is down.</p>`;
   }
 }
 
-// Simple handler for the button click
-function handleSigning(itemName) {
-    console.log(`Transfer request sent for: ${itemName}!`);
-    alert(`Transfer request sent for: ${itemName}!`);
+function handleSigning(itemName){
+  console.log('Transfer request for:', itemName);
+  alert(`Transfer request sent for: ${itemName}!`);
 }
 
 function filterShop(cat, el){
-  document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('active')); el.classList.add('active');
+  // Clear all gaffer picks when user manually filters
+  document.querySelectorAll('.pcard').forEach(c => {
+    const badge = c.querySelector('.pgf');
+    if(badge) badge.classList.remove('show');
+    c.style.outline = 'none';
+  });
+  document.querySelectorAll('.ctab').forEach(t => t.classList.remove('active','ghl'));
+  el.classList.add('active');
   let v=0;
   document.querySelectorAll('.pcard').forEach(c=>{
-    // cards can belong to multiple categories (space separated)
     const cats = c.dataset.cat ? c.dataset.cat.split(' ') : [];
     const match = cat==='all' || cats.includes(cat);
     c.classList.toggle('vis',match); if(match) v++;
@@ -991,27 +1084,8 @@ function fixBdr(){
   v.slice(-4).forEach(c=>c.style.borderBottom='none');
 }
 
-function highlightShop(code,temp){
-  const cat=gCat(code,temp), m=GM[cat]; if(!m) return;
-  document.getElementById('gafferBadgeTxt').textContent=m.msg;
-  document.getElementById('gafferBadge').classList.add('show');
-  document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('ghl'));
-  const tt=document.querySelector(`.ctab[data-filter="${m.tab}"]`); if(tt) tt.classList.add('ghl');
-  document.querySelectorAll('.pcard').forEach(c=>{
-    const cats=JSON.parse(c.dataset.gc||'[]');
-    const f=c.querySelector('.pgf');
-    if(f) f.classList.toggle('show', cats.includes(cat));
-  });
-  setTimeout(()=>document.getElementById('shop').scrollIntoView({behavior:'smooth',block:'start'}),1800);
-}
-
-/* ══ PRODUCT IMAGE CAROUSEL ══ */
-// Removed — images display directly with object-fit: cover
-
 window.addEventListener('DOMContentLoaded', () => {
   loadLiveShop();
-  
-  // Delay the border fix slightly to let items load
   setTimeout(() => {
     fixBdr();
     document.querySelectorAll('.pcard,.ctab,.kc').forEach(el => {
